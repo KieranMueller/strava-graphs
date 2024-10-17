@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core';
-import { CLIENT_ID, CLIENT_SECRET } from './secrets'
 import { catchError, map, Observable, of } from 'rxjs'
 import { STRAVA_BASE_URL } from './env'
+import { environment } from '../../environment'
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,8 @@ export class AuthService {
 
   exchangeAuthCodeForTokenData(code: string): Observable<Object> {
     const formData = new FormData()
-    formData.append('client_id', CLIENT_ID)
-    formData.append('client_secret', CLIENT_SECRET)
+    formData.append('client_id', environment.CLIENT_ID)
+    formData.append('client_secret', environment.CLIENT_SECRET)
     formData.append('code', code)
     formData.append('grant_type', 'authorization_code')
 
