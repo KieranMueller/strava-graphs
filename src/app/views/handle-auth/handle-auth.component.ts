@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'
+import { AuthParams } from '../../shared/types'
 
 @Component({
   selector: 'app-handle-auth',
@@ -9,11 +10,17 @@ import { ActivatedRoute } from '@angular/router'
   styleUrl: './handle-auth.component.scss'
 })
 export class HandleAuthComponent implements OnInit {
+    params: AuthParams = {
+        code: '',
+        scope: '',
+        state: ''
+    }
 
     constructor(private route: ActivatedRoute) {}
 
     ngOnInit() {
-        console.log(this.route)
+        let params = this.route.snapshot.queryParams;
+        this.params = {...this.params, ...params}
     }
 
 }
