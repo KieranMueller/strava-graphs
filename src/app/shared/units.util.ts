@@ -1,0 +1,11 @@
+export const METERS_SEC_TO_MPH = 2.237
+export const METERS_SEC_TO_KMH = 3.6
+export const METERS_SEC_TO_METERS_SEC = 1
+export const METERS_TO_MILES = 0.000621371
+export const METERS_TO_KILOMETERS = 0.001
+export const METERS_TO_FEET = 3.281
+export const METERS_TO_YARDS = 1.09361
+export const METERS_TO_METERS = 1
+export const SECONDS_TO_HOURS = 0.00027777777
+export const SECONDS_TO_MINUTES = 0.01666666666
+export const SECONDS_TO_SECONDS = 1
