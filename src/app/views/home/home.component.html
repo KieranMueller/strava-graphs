@@ -3,26 +3,26 @@
 <hr>
 <div class="filters-div">
     <div class="dropdown">
-        <p>Select Activity Types</p>
+        <p>Select Activity Types <br>(All unless specified)</p>
         <p>Cycle Sports</p>
         @for (cycleSport of activityTypes.cycleSports; track cycleSport) {
-            <label><input type="checkbox" [value]="cycleSport" (change)="toggleActivities($event)">{{cycleSport}}</label>
+            <label><input type="checkbox" [checked]="selectedActivities.includes(cycleSport)" [value]="cycleSport" (change)="toggleActivities($event)">{{cycleSport}}</label>
         }
         <p>Foot Sports</p>
         @for (footSport of activityTypes.footSports; track footSport) {
-            <label><input type="checkbox" [value]="footSport" (change)="toggleActivities($event)">{{footSport}}</label>
+            <label><input type="checkbox" [checked]="selectedActivities.includes(footSport)" [value]="footSport" (change)="toggleActivities($event)">{{footSport}}</label>
         }
         <p>Water Sports</p>
         @for (waterSport of activityTypes.waterSports; track waterSport) {
-            <label><input type="checkbox" [value]="waterSport" (change)="toggleActivities($event)">{{waterSport}}</label>
+            <label><input type="checkbox" [checked]="selectedActivities.includes(waterSport)" [value]="waterSport" (change)="toggleActivities($event)">{{waterSport}}</label>
         }
         <p>Winter Sports</p>
         @for (winterSport of activityTypes.winterSports; track winterSport) {
-            <label><input type="checkbox" [value]="winterSport" (change)="toggleActivities($event)">{{winterSport}}</label>
+            <label><input type="checkbox" [checked]="selectedActivities.includes(winterSport)" [value]="winterSport" (change)="toggleActivities($event)">{{winterSport}}</label>
         }
         <p>Other Sports</p>
         @for (otherSport of activityTypes.otherSports; track otherSport) {
-            <label><input type="checkbox" [value]="otherSport" (change)="toggleActivities($event)">{{otherSport}}</label>
+            <label><input type="checkbox" [checked]="selectedActivities.includes(otherSport)" [value]="otherSport" (change)="toggleActivities($event)">{{otherSport}}</label>
         }
     </div>
     <div class="options">
@@ -31,25 +31,25 @@
             <p>Units of speed</p>
             @for (speedUnit of availableUnits.speed; track speedUnit) {
                 <label [for]="speedUnit">{{speedUnit}}
-                    <input type="radio" [id]="speedUnit" name="speed" [value]="speedUnit" [checked]="speedUnit === 'mph'" (change)="handleUnitFilters(speedUnit, 'speed')">
+                    <input type="radio" [id]="speedUnit" name="speed" [value]="speedUnit" [checked]="speedUnit === selectedUnits.speed" (change)="handleUnitFilters(speedUnit, 'speed')">
                 </label>
             }
             <p>Distance</p>
             @for (distanceUnit of availableUnits.distance; track distanceUnit) {
                 <label [for]="distanceUnit">{{distanceUnit}}
-                    <input type="radio" [id]="distanceUnit" name="distance" [value]="distanceUnit" [checked]="distanceUnit === 'miles'" (change)="handleUnitFilters(distanceUnit, 'distance')">
+                    <input type="radio" [id]="distanceUnit" name="distance" [value]="distanceUnit" [checked]="distanceUnit === selectedUnits.distance" (change)="handleUnitFilters(distanceUnit, 'distance')">
                 </label>
             }
             <p>Time</p>
             @for (timeUnit of availableUnits.time; track timeUnit) {
                 <label [for]="timeUnit">{{timeUnit}}
-                    <input type="radio" [id]="timeUnit" name="time" [value]="timeUnit" [checked]="timeUnit === 'minutes'" (change)="handleUnitFilters(timeUnit, 'time')">
+                    <input type="radio" [id]="timeUnit" name="time" [value]="timeUnit" [checked]="timeUnit === selectedUnits.time" (change)="handleUnitFilters(timeUnit, 'time')">
                 </label>
             }
             <p>Elevation</p>
             @for (elevationUnit of availableUnits.elevation; track elevationUnit) {
                 <label [for]="elevationUnit">{{elevationUnit}}
-                    <input type="radio" [id]="elevationUnit" name="elevation" [value]="elevationUnit" [checked]="elevationUnit === 'feet'" (change)="handleUnitFilters(elevationUnit, 'elevation')">
+                    <input type="radio" [id]="elevationUnit" name="elevation" [value]="elevationUnit" [checked]="elevationUnit === selectedUnits.elevation" (change)="handleUnitFilters(elevationUnit, 'elevation')">
                 </label>
             }
         </div>

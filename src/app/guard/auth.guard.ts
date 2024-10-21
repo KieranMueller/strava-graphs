@@ -2,24 +2,24 @@ import { inject } from '@angular/core'
 import { CanActivateFn, Router } from '@angular/router'
 import { catchError, map, Observable, of } from 'rxjs'
 import { AuthService } from '../shared/auth.service'
-import { LOCAL_STORAGE_KEY } from '../shared/env'
+import { LOCAL_STORAGE_TOKEN_KEY } from '../shared/env'
 import { TokenData } from '../shared/types'
 
 export const isAuthenticated: CanActivateFn = (): Observable<boolean> => {
     const authService = inject(AuthService)
     const router = inject(Router)
 
-    const tokenDataStr = localStorage.getItem(LOCAL_STORAGE_KEY);
+    const tokenDataStr = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)
     let tokenDataObj: TokenData | {} = {}
-    
+
     if (tokenDataStr) {
-      try {
-        tokenDataObj = JSON.parse(tokenDataStr)
-      } catch (error) {
-        console.error("Error parsing token data", error)
-        router.navigateByUrl('/login')
-        return of(false)
-      }
+        try {
+            tokenDataObj = JSON.parse(tokenDataStr)
+        } catch (error) {
+            console.error("Error parsing token data", error)
+            router.navigateByUrl('/login')
+            return of(false)
+        }
     }
 
     if (!('accessToken' in tokenDataObj)) {

@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core'
 import { Activity, ActivityType, ActivityTypeObj, Athlete, AvailableUnitsObj, CreateGraphArgs, GraphType, UnitTypes } from '../../shared/types'
-import { LOCAL_STORAGE_KEY } from '../../shared/env'
 import { AthleteService } from '../../shared/athlete.service'
 import { CommonModule, DatePipe } from '@angular/common'
 import Chart from 'chart.js/auto'
 import { METERS_SEC_TO_KMH, METERS_SEC_TO_METERS_SEC, METERS_SEC_TO_MPH, METERS_TO_FEET, METERS_TO_KILOMETERS, METERS_TO_METERS, METERS_TO_MILES, METERS_TO_YARDS, SECONDS_TO_HOURS, SECONDS_TO_MINUTES, SECONDS_TO_SECONDS } from '../../shared/units.util'
+import { LOCAL_STORAGE_SETTINGS_KEY, LOCAL_STORAGE_TOKEN_KEY } from '../../shared/env'
+import chartTrendline from "chartjs-plugin-trendline"
+
 
 @Component({
     selector: 'app-home',
@@ -43,24 +45,53 @@ export class HomeComponent implements OnInit {
         time: 'minutes',
         elevation: 'feet'
     }
+    isViewingAllActivities = true
 
     constructor(private athleteService: AthleteService, private datePipe: DatePipe) { }
 
     ngOnInit() {
-        const tokenData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!)
+        this.loadFromLocalStorage()
+        this.getActivites()
+    }
+
+    loadFromLocalStorage() {
+        const tokenData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)!)
         if (tokenData) {
             this.athlete = tokenData.athlete
         }
-        this.getActivites()
+        const settingsStr = localStorage.getItem(LOCAL_STORAGE_SETTINGS_KEY)
+        if (!settingsStr) return
+        const settings = JSON.parse(settingsStr)
+        console.log(settings)
+        if (settings) {
+            if (settings.units) {
+                console.log(settings.units)
+                this.selectedUnits = settings.units
+            }
+            if (settings.activities) {
+                console.log(settings.activities)
+                this.selectedActivities = settings.activities
+            }
+            if (settings.graphTypes) {
+                console.log(settings.graphTypes)
+                if (settings.graphTypes.length === 0)
+                    this.graphTypes.push('avgSpeed')
+                else this.graphTypes = settings.graphTypes
+            }
+        }
     }
 
     getActivites() {
         this.athleteService.getAthleteActivities().subscribe({
             next: (data: any) => {
-                console.log(data)
-                this.activities = data
-                this.masterActivites = data
-                this.activities.reverse()
+                this.activities = data.reverse()
+                this.masterActivites = this.activities
+                if (this.selectedActivities.length > 0) {
+                    this.activities = this.activities.filter(activity =>
+                        this.selectedActivities.includes(activity.type as ActivityType) ||
+                        this.selectedActivities.includes(activity.sport_type as ActivityType))
+                }
+                this.chooseGraph()
             }, error: (e: any) => {
                 console.log(e)
             }
@@ -81,6 +112,7 @@ export class HomeComponent implements OnInit {
     addOrRemoveGraphType(graphType: GraphType) {
         if (!this.graphTypes.includes(graphType)) this.graphTypes.push(graphType)
         else this.graphTypes.splice(this.graphTypes.indexOf(graphType), 1)
+        this.persistSettingsInStorage()
         this.chooseGraph()
     }
 
@@ -153,21 +185,22 @@ export class HomeComponent implements OnInit {
                     this.datePipe.transform(activity.start_date, 'shortDate')),
                 datasets: args.datasets
             },
-            options: args.options
+            options: args.options,
         })
     }
 
     toggleActivities(event: any) {
-        const sport = event.target.value
         const checked = event.target.checked
+        const sport = event.target.value
 
         if (checked) this.selectedActivities.push(sport)
         else this.selectedActivities.splice(this.selectedActivities.indexOf(sport), 1)
-
         this.activities = this.masterActivites
         this.activities = this.activities.filter(activity =>
             this.selectedActivities.includes(activity.type as ActivityType) ||
             this.selectedActivities.includes(activity.sport_type as ActivityType))
+        if (this.selectedActivities.length === 0) this.activities = this.masterActivites
+        this.persistSettingsInStorage()
         this.chooseGraph()
     }
 
@@ -211,6 +244,16 @@ export class HomeComponent implements OnInit {
 
     handleUnitFilters(unit: any, typeOfUnit: UnitTypes) {
         this.selectedUnits[typeOfUnit] = unit
+        this.persistSettingsInStorage()
         this.chooseGraph()
+    }
+
+    persistSettingsInStorage() {
+        const settings = {
+            units: this.selectedUnits,
+            activities: this.selectedActivities,
+            graphTypes: this.graphTypes
+        }
+        localStorage.setItem('performanceGraphs-settings', JSON.stringify(settings))
     }
 }

@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { LOCAL_STORAGE_KEY, STRAVA_BASE_URL } from './env'
+import { STRAVA_BASE_URL, LOCAL_STORAGE_TOKEN_KEY } from './env'
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +10,7 @@ export class AthleteService {
     constructor(private http: HttpClient) { }
 
     getAthleteActivities() {
-        const tokenData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)!)
+        const tokenData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)!)
         const headers = new HttpHeaders({
             Authorization: `Bearer ${tokenData.accessToken}`
         })
