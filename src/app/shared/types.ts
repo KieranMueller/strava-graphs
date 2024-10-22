@@ -1,14 +1,20 @@
 export type CreateGraphArgs = {
-    datasets: { label: string, data: number[], backgroundColor: string }[]
-    options: { aspectRatio: number }
+    datasets: {
+        label: string,
+        data: number[],
+        backgroundColor: string,
+        trendlineLinear: {
+            style: string,
+            lineStyle: string,
+            width: number
+        }
+    }[]
+    options: {
+        aspectRatio: number
+    }
 }
 
-export type SelectedUnitsObj = {
-    speed: SpeedUnits,
-    distance: DistanceUnits,
-    time: TimeUnits,
-    elevation: ElevationUnits
-}
+export type ClampedUnitsObj = { [key in GraphType]: { min: number | null, max: number | null } }
 
 export type AvailableUnitsObj = {
     speed: SpeedUnits[],
@@ -17,7 +23,11 @@ export type AvailableUnitsObj = {
     elevation: ElevationUnits[]
 }
 
+export type SelectedUnitsObj = { [key in UnitTypes]: AllUnits }
+
 export type UnitTypes = 'speed' | 'distance' | 'time' | 'elevation'
+
+export type AllUnits = SpeedUnits | DistanceUnits | TimeUnits | ElevationUnits
 
 export type SpeedUnits = 'mph' | 'km/h' | 'm/s'
 

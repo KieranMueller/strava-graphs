@@ -19,6 +19,12 @@ jobs:
         with:
           submodules: true
           lfs: false
+      - name: Create env.js with secrets
+        run: |
+          echo "window.__env = { CLIENT_ID: '$CLIENT_ID', CLIENT_SECRET: '$CLIENT_SECRET' };" > src/env.js
+        env:
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1

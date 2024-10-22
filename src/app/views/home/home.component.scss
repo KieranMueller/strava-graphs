@@ -10,8 +10,29 @@
     display: flex;
     flex-direction: column;
     padding: 10px;
-    width: fit-content;
     height: 200px;
     overflow-y: scroll;
     border: 1px solid black;
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.range {
+    width: 60px;
+}
+
+.m-10 {
+    margin: 10px;
+}
+
+.ml-5 {
+    margin-left: 5px;
+}
+
+.ml-10 {
+    margin-left: 10px;
 }

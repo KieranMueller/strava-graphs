@@ -1,0 +1,6 @@
+export const BLUE = '#2274A5'
+export const ORANGE = '#F75C03'
+export const YELLOW = '#F1C40F'
+export const PINK = '#D90368'
+export const GREEN = '#00CC66'
+export const GREY = '#6D6867'

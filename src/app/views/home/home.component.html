@@ -27,8 +27,8 @@
     </div>
     <div class="options">
         <div class="dropdown">
-            <p>Options</p>
-            <p>Units of speed</p>
+            <p>Units</p>
+            <p>Speed</p>
             @for (speedUnit of availableUnits.speed; track speedUnit) {
                 <label [for]="speedUnit">{{speedUnit}}
                     <input type="radio" [id]="speedUnit" name="speed" [value]="speedUnit" [checked]="speedUnit === selectedUnits.speed" (change)="handleUnitFilters(speedUnit, 'speed')">
@@ -53,6 +53,23 @@
                 </label>
             }
         </div>
+    </div>
+    <div class="dropdown">
+        <p>Graph Filters</p>
+        <p>(Filter out activities - <br>for example: that snail's pace jog <br>you did with your mom and dad last weekend)</p>
+        @for (graphType of availableGraphTypes; track graphType) {
+            <div>
+                <p>{{getGraphTypeLabel(graphType)}}</p>
+                <div class="flex">
+                    <input #minInput class="range" type="number" (keyup)="clampUnits(graphType, 'min', $event, getSelectedUnitFromGraphType(graphType))">
+                    <span class="ml-5">{{getSelectedUnitFromGraphType(graphType)}}</span>
+                    <p class="m-10">to</p>
+                    <input #maxInput class="range" type="number" (keyup)="clampUnits(graphType, 'max', $event, getSelectedUnitFromGraphType(graphType))">
+                    <span class="ml-5">{{getSelectedUnitFromGraphType(graphType)}}</span>
+                    <button class="ml-10" (click)="clampUnits(graphType, null, $event, getSelectedUnitFromGraphType(graphType), true, minInput, maxInput)">Reset</button>
+                </div>
+            </div>
+        }
     </div>
 </div>
 <p>Select Metrics</p>
