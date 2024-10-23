@@ -1,0 +1,48 @@
+name: Azure Static Web Apps CI/CD
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - master
+
+jobs:
+  build_and_deploy_job:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Build and Deploy Job
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: false
+
+      # Build the Angular app
+      - name: Install and Build
+        run: |
+          npm install
+          npm run build
+
+      # Create the env.js file in the output directory after build
+      - name: Create env.js with secrets
+        run: |
+          echo "window.__env = { FRONTEND_BASE_URL: '$FRONTEND_BASE_URL', CLIENT_ID: '$CLIENT_ID', CLIENT_SECRET: '$CLIENT_SECRET' };" > dist/strava-graphs/browser/env.js
+        env:
+          FRONTEND_BASE_URL: ${{ secrets.FRONTEND_BASE_URL }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+
+      # Deploy the app
+      - name: Build And Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_VICTORIOUS_BUSH_0A9974C0F }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          action: "upload"
+          app_location: "/" # App source code path
+          api_location: "" # Api source code path - optional
+          output_location: "dist/strava-graphs/browser"
