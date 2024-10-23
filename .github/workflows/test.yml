@@ -23,7 +23,7 @@ jobs:
       # Create env.js with secrets and move it to the correct location in the dist folder
       - name: Create env.js with secrets
         run: |
-          echo "(function (window) { window.__env = window.__env || {}; window.__env.CLIENT_ID = '$CLIENT_ID'; window.__env.CLIENT_SECRET = '$CLIENT_SECRET'; })(this);" > public/env.js
+          echo "(function (window) { window.__env = window.__env || {}; window.__env.FRONTEND_BASE_URL = '$FRONTEND_BASE_URL'; window.__env.CLIENT_ID = '$CLIENT_ID'; window.__env.CLIENT_SECRET = '$CLIENT_SECRET'; })(this);" > public/env.js
         env:
           FRONTEND_BASE_URL: ${{ secrets.FRONTEND_BASE_URL }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
