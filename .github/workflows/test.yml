@@ -38,7 +38,7 @@ jobs:
         run: npm install
 
       - name: Build the Angular app
-        run: npm run build -- --prod
+        run: npm run build --omit=dev
 
       # Copy env.js to the build output directory (dist)
       - name: Copy env.js to dist folder
