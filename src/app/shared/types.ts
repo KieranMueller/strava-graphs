@@ -53,6 +53,8 @@ export type OtherSports = 'Handcycle' | 'Inline Skate' | 'Rock Climb' | 'Roller 
 
 export type ActivityType = CycleSports | FootSports | WaterSports | WinterSports | OtherSports
 
+export type ActivityHeader = 'Cycle Sports' | 'Foot Sports' | 'Water Sports' | 'Winter Sports' | 'Other Sports'
+
 export type ActivityTypeObj = {
     cycleSports: CycleSports[],
     footSports: FootSports[],

@@ -1,18 +1,20 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core'
-import { Activity, ActivityType, ActivityTypeObj, AllUnits, Athlete, AvailableUnitsObj, ClampedUnitsObj, CreateGraphArgs, GraphType, SelectedUnitsObj, SpeedUnits, UnitTypes } from '../../shared/types'
+import { Activity, ActivityType, ActivityTypeObj, AllUnits, Athlete, AvailableUnitsObj, ClampedUnitsObj, CreateGraphArgs, GraphType, SelectedUnitsObj, UnitTypes } from '../../shared/types'
 import { AthleteService } from '../../shared/athlete.service'
 import { CommonModule, DatePipe } from '@angular/common'
+import { FormsModule } from '@angular/forms'
 import Chart from 'chart.js/auto'
-import { FEET_TO_METERS, HOURS_TO_SECONDS, KILOMETERS_TO_METERS, KMH_TO_METERS_SEC, METERS_SEC_TO_KMH, METERS_SEC_TO_METERS_SEC, METERS_SEC_TO_MPH, METERS_TO_FEET, METERS_TO_KILOMETERS, METERS_TO_METERS, METERS_TO_MILES, METERS_TO_YARDS, MILES_TO_METERS, MINUTES_TO_SECONDS, MPH_TO_METERS_SEC, SECONDS_TO_HOURS, SECONDS_TO_MINUTES, SECONDS_TO_SECONDS, YARDS_TO_METERS } from '../../shared/units.util'
+import { mapValueAndUnitToDefaultValueAndUnit, METERS_SEC_TO_KMH, METERS_SEC_TO_METERS_SEC, METERS_SEC_TO_MPH, METERS_TO_FEET, METERS_TO_KILOMETERS, METERS_TO_METERS, METERS_TO_MILES, METERS_TO_YARDS, SECONDS_TO_HOURS, SECONDS_TO_MINUTES, SECONDS_TO_SECONDS } from '../../shared/units.util'
 import { LOCAL_STORAGE_SETTINGS_KEY, LOCAL_STORAGE_TOKEN_KEY } from '../../shared/env'
 import chartTrendline from "chartjs-plugin-trendline"
 import { BLUE, GREEN, GREY, ORANGE, PINK, YELLOW } from '../../shared/color.util'
+import { mapGraphTypeToActivityObjField } from '../../shared/graph.util'
 Chart.register(chartTrendline)
 
 @Component({
     selector: 'app-home',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, FormsModule],
     providers: [DatePipe],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
@@ -278,45 +280,29 @@ export class HomeComponent implements OnInit {
 
     clampUnits(graphType: GraphType, type: 'min' | 'max' | null, event: any, unit: AllUnits, reset = false, minInput?: HTMLInputElement, maxInput?: HTMLInputElement) {
         if (!reset) {
-            const value: number = this.mapValueAndUnitToDefaultValueAndUnit(event.target.value, unit)
-            this.clampedUnits[graphType][type!] = value
+            const value = event.target.value
+            const defaultValue = mapValueAndUnitToDefaultValueAndUnit(value, unit)
+            this.clampedUnits[graphType][type!] = defaultValue
         } else {
             this.clampedUnits[graphType].min = null
             this.clampedUnits[graphType].max = null
             if (minInput) minInput.value = ''
             if (maxInput) maxInput.value = ''
         }
-        const min = this.clampedUnits[graphType].min
-        const max = this.clampedUnits[graphType].max
-        const field = this.mapGraphTypeToActivityObjField(graphType)
-        this.activities = this.masterActivites.filter(activity => (activity[field] as number >= (min ? min : Number.MIN_VALUE)) && (activity[field] as number <= (max ? max : Number.MAX_VALUE)))
+        this.clampActivities()
+        this.persistSettingsInStorage()
         this.chooseGraph()
     }
 
-    mapValueAndUnitToDefaultValueAndUnit(value: number, unit: AllUnits): number {
-        switch (unit) {
-            case 'mph': return value * MPH_TO_METERS_SEC
-            case 'km/h': return value * KMH_TO_METERS_SEC
-            case 'm/s': return value
-            case 'miles': return value * MILES_TO_METERS
-            case 'kilometers': return value * KILOMETERS_TO_METERS
-            case 'meters': return value
-            case 'hours': return value * HOURS_TO_SECONDS
-            case 'minutes': return value * MINUTES_TO_SECONDS
-            case 'seconds': return value
-            case 'feet': return value * FEET_TO_METERS
-            case 'yards': return value * YARDS_TO_METERS
-        }
-    }
-
-    mapGraphTypeToActivityObjField(graphType: GraphType): keyof Activity {
-        switch (graphType) {
-            case 'avgSpeed': return 'average_speed'
-            case 'distance': return 'distance'
-            case 'movingTime': return 'moving_time'
-            case 'elapsedTime': return 'elapsed_time'
-            case 'maxSpeed': return 'max_speed'
-            case 'elevationGain': return 'total_elevation_gain'
+    clampActivities() {
+        this.activities = this.masterActivites
+        for (let key in this.clampedUnits) {
+            const min = this.clampedUnits[key as GraphType].min
+            const max = this.clampedUnits[key as GraphType].max
+            const field = mapGraphTypeToActivityObjField(key as GraphType)
+            this.activities = this.activities.filter(activity =>
+                (activity[field] as number >= (min ? min : (Number.MIN_SAFE_INTEGER)))
+                && (activity[field] as number <= (max ? max : Number.MAX_SAFE_INTEGER)))
         }
     }
 
@@ -333,8 +319,16 @@ export class HomeComponent implements OnInit {
         const settings = {
             units: this.selectedUnits,
             activities: this.selectedActivities,
-            graphTypes: this.graphTypes
+            graphTypes: this.graphTypes,
         }
         localStorage.setItem('performanceGraphs-settings', JSON.stringify(settings))
+    }
+
+    getActivityCountByName(activityName: ActivityType): number {
+        let count = 0
+        this.masterActivites.forEach(activity => {
+            if (activity.type === activityName) count++
+        })
+        return count
     }
 }

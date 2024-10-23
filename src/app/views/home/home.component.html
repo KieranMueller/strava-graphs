@@ -6,23 +6,23 @@
         <p>Select Activity Types <br>(All unless specified)</p>
         <p>Cycle Sports</p>
         @for (cycleSport of activityTypes.cycleSports; track cycleSport) {
-            <label><input type="checkbox" [checked]="selectedActivities.includes(cycleSport)" [value]="cycleSport" (change)="toggleActivities($event)">{{cycleSport}}</label>
+            <label><input type="checkbox" [checked]="selectedActivities.includes(cycleSport)" [value]="cycleSport" (change)="toggleActivities($event)">{{cycleSport}} ({{getActivityCountByName(cycleSport)}})</label>
         }
         <p>Foot Sports</p>
         @for (footSport of activityTypes.footSports; track footSport) {
-            <label><input type="checkbox" [checked]="selectedActivities.includes(footSport)" [value]="footSport" (change)="toggleActivities($event)">{{footSport}}</label>
+            <label><input type="checkbox" [checked]="selectedActivities.includes(footSport)" [value]="footSport" (change)="toggleActivities($event)">{{footSport}} ({{getActivityCountByName(footSport)}})</label>
         }
         <p>Water Sports</p>
         @for (waterSport of activityTypes.waterSports; track waterSport) {
-            <label><input type="checkbox" [checked]="selectedActivities.includes(waterSport)" [value]="waterSport" (change)="toggleActivities($event)">{{waterSport}}</label>
+            <label><input type="checkbox" [checked]="selectedActivities.includes(waterSport)" [value]="waterSport" (change)="toggleActivities($event)">{{waterSport}} ({{getActivityCountByName(waterSport)}})</label>
         }
         <p>Winter Sports</p>
         @for (winterSport of activityTypes.winterSports; track winterSport) {
-            <label><input type="checkbox" [checked]="selectedActivities.includes(winterSport)" [value]="winterSport" (change)="toggleActivities($event)">{{winterSport}}</label>
+            <label><input type="checkbox" [checked]="selectedActivities.includes(winterSport)" [value]="winterSport" (change)="toggleActivities($event)">{{winterSport}} ({{getActivityCountByName(winterSport)}})</label>
         }
         <p>Other Sports</p>
         @for (otherSport of activityTypes.otherSports; track otherSport) {
-            <label><input type="checkbox" [checked]="selectedActivities.includes(otherSport)" [value]="otherSport" (change)="toggleActivities($event)">{{otherSport}}</label>
+            <label><input type="checkbox" [checked]="selectedActivities.includes(otherSport)" [value]="otherSport" (change)="toggleActivities($event)">{{otherSport}} ({{getActivityCountByName(otherSport)}})</label>
         }
     </div>
     <div class="options">
