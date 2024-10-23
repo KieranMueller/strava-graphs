@@ -25,6 +25,7 @@ jobs:
         run: |
           echo "(function (window) { window.__env = window.__env || {}; window.__env.CLIENT_ID = '$CLIENT_ID'; window.__env.CLIENT_SECRET = '$CLIENT_SECRET'; })(this);" > src/env.js
         env:
+          FRONTEND_BASE_URL: ${{ secrets.FRONTEND_BASE_URL }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
 
