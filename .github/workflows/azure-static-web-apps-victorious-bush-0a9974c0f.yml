@@ -1,4 +1,4 @@
-name: Azure Static Web Apps CI/CD
+name: Deploy to Azure
 
 on:
   push:
@@ -19,12 +19,33 @@ jobs:
         with:
           submodules: true
           lfs: false
+
+      # Create env.js with secrets and move it to the correct location in the dist folder
       - name: Create env.js with secrets
         run: |
-          echo "window.__env = { CLIENT_ID: '$CLIENT_ID', CLIENT_SECRET: '$CLIENT_SECRET' };" > dist/strava-graphs/browser/env.js
+          echo "(function (window) { window.__env = window.__env || {}; window.__env.FRONTEND_BASE_URL = '$FRONTEND_BASE_URL'; window.__env.CLIENT_ID = '$CLIENT_ID'; window.__env.CLIENT_SECRET = '$CLIENT_SECRET'; })(this);" > env.js
         env:
+          FRONTEND_BASE_URL: ${{ secrets.FRONTEND_BASE_URL }}
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+
+      # Install dependencies and build the Angular app
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the Angular app
+        run: npm run build --omit=dev
+
+      # Copy env.js to the build output directory (dist)
+      - name: Copy env.js to dist folder
+        run: cp env.js dist/strava-graphs/browser/env.js
+
+      # Deploy to Azure Static Web Apps
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
