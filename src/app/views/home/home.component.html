@@ -61,16 +61,17 @@
             <div>
                 <p>{{getGraphTypeLabel(graphType)}}</p>
                 <div class="flex">
-                    <input #minInput class="range" type="number" (keyup)="clampUnits(graphType, 'min', $event, getSelectedUnitFromGraphType(graphType))">
+                    <input #minInput [id]="graphType" class="range" type="number" (input)="clampUnits(graphType, 'min', $event, getSelectedUnitFromGraphType(graphType))">
                     <span class="ml-5">{{getSelectedUnitFromGraphType(graphType)}}</span>
                     <p class="m-10">to</p>
-                    <input #maxInput class="range" type="number" (keyup)="clampUnits(graphType, 'max', $event, getSelectedUnitFromGraphType(graphType))">
+                    <input #maxInput [id]="graphType" class="range" type="number" (input)="clampUnits(graphType, 'max', $event, getSelectedUnitFromGraphType(graphType))">
                     <span class="ml-5">{{getSelectedUnitFromGraphType(graphType)}}</span>
                     <button class="ml-10" (click)="clampUnits(graphType, null, $event, getSelectedUnitFromGraphType(graphType), true, minInput, maxInput)">Reset</button>
                 </div>
             </div>
         }
     </div>
+    <button (click)="reloadPage()">Reset Deleted Points</button>
 </div>
 <p>Select Metrics</p>
 <div>

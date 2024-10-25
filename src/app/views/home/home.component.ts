@@ -149,7 +149,6 @@ export class HomeComponent implements OnInit {
 
         let args: CreateGraphArgs = {
             datasets: [],
-            options: { aspectRatio: 2 }
         }
 
         for (let graphType of this.graphTypes) {
@@ -215,8 +214,26 @@ export class HomeComponent implements OnInit {
                     this.datePipe.transform(activity.start_date, 'shortDate')),
                 datasets: args.datasets
             },
-            options: args.options,
+            options: {
+                onClick: (event) => this.handleChartClickPoint(event),
+                aspectRatio: 2
+            },
         })
+    }
+
+    handleChartClickPoint(event: any) {
+        const points = this.chart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true)
+        if (points.length) {
+            const pointIndex = points[0].index
+            const clickedDataPoint = this.chart.data.datasets[0].data[pointIndex]
+
+            console.log(clickedDataPoint)
+            console.log(pointIndex)
+            console.log(this.activities[pointIndex].id)
+            this.activities.splice(pointIndex, 1)
+            console.log(this.activities)
+            this.chooseGraph()
+        }
     }
 
     toggleActivities(event: any) {
@@ -226,12 +243,17 @@ export class HomeComponent implements OnInit {
         if (checked) this.selectedActivities.push(sport)
         else this.selectedActivities.splice(this.selectedActivities.indexOf(sport), 1)
         this.activities = this.masterActivites
+        this.filterActivities()
+        this.clampActivities()
+        this.persistSettingsInStorage()
+        this.chooseGraph()
+    }
+
+    filterActivities() {
         this.activities = this.activities.filter(activity =>
             this.selectedActivities.includes(activity.type as ActivityType) ||
             this.selectedActivities.includes(activity.sport_type as ActivityType))
         if (this.selectedActivities.length === 0) this.activities = this.masterActivites
-        this.persistSettingsInStorage()
-        this.chooseGraph()
     }
 
     getUnitFactor(unit: UnitTypes): number {
@@ -272,10 +294,56 @@ export class HomeComponent implements OnInit {
         else return 1
     }
 
-    handleUnitFilters(unit: any, typeOfUnit: UnitTypes) {
-        this.selectedUnits[typeOfUnit] = unit
+    handleUnitFilters(unit: any, unitType: UnitTypes) {
+        this.selectedUnits[unitType] = unit
+        this.updateClampInputs(unitType)
+        this.clampActivities()
         this.persistSettingsInStorage()
         this.chooseGraph()
+    }
+
+    updateClampInputs(unitType: UnitTypes) {
+        // Refactor? Condense?
+        switch (unitType) {
+            case 'speed': {
+                const minInput = this.minInputs.find(el => el.nativeElement.id === 'avgSpeed')
+                const maxInput = this.maxInputs.find(el => el.nativeElement.id === 'avgSpeed')
+                if (minInput) minInput.nativeElement.value = this.clampedUnits.avgSpeed.min! * this.getUnitFactor(unitType) || null
+                if (maxInput) maxInput.nativeElement.value = this.clampedUnits.avgSpeed.max! * this.getUnitFactor(unitType) || null
+
+                const minInput2 = this.minInputs.find(el => el.nativeElement.id === 'maxSpeed')
+                const maxInput2 = this.maxInputs.find(el => el.nativeElement.id === 'maxSpeed')
+                if (minInput2) minInput2.nativeElement.value = this.clampedUnits.maxSpeed.min! * this.getUnitFactor(unitType) || null
+                if (maxInput2) maxInput2.nativeElement.value = this.clampedUnits.maxSpeed.max! * this.getUnitFactor(unitType) || null
+                break
+            }
+            case 'distance': {
+                const minInput = this.minInputs.find(el => el.nativeElement.id === 'distance')
+                const maxInput = this.maxInputs.find(el => el.nativeElement.id === 'distance')
+                if (minInput) minInput.nativeElement.value = this.clampedUnits.distance.min! * this.getUnitFactor(unitType) || null
+                if (maxInput) maxInput.nativeElement.value = this.clampedUnits.distance.max! * this.getUnitFactor(unitType) || null
+                break
+            }
+            case 'time': {
+                const minInput = this.minInputs.find(el => el.nativeElement.id === 'elapsedTime')
+                const maxInput = this.maxInputs.find(el => el.nativeElement.id === 'elapsedTime')
+                if (minInput) minInput.nativeElement.value = this.clampedUnits.elapsedTime.min! * this.getUnitFactor(unitType) || null
+                if (maxInput) maxInput.nativeElement.value = this.clampedUnits.elapsedTime.max! * this.getUnitFactor(unitType) || null
+
+                const minInput2 = this.minInputs.find(el => el.nativeElement.id === 'movingTime')
+                const maxInput2 = this.maxInputs.find(el => el.nativeElement.id === 'movingTime')
+                if (minInput2) minInput2.nativeElement.value = this.clampedUnits.movingTime.min! * this.getUnitFactor(unitType) || null
+                if (maxInput2) maxInput2.nativeElement.value = this.clampedUnits.movingTime.max! * this.getUnitFactor(unitType) || null
+                break
+            }
+            case 'elevation': {
+                const minInput = this.minInputs.find(el => el.nativeElement.id === 'elevationGain')
+                const maxInput = this.maxInputs.find(el => el.nativeElement.id === 'elevationGain')
+                if (minInput) minInput.nativeElement.value = this.clampedUnits.elevationGain.min! * this.getUnitFactor(unitType) || null
+                if (maxInput) maxInput.nativeElement.value = this.clampedUnits.elevationGain.max! * this.getUnitFactor(unitType) || null
+                break
+            }
+        }
     }
 
     clampUnits(graphType: GraphType, type: 'min' | 'max' | null, event: any, unit: AllUnits, reset = false, minInput?: HTMLInputElement, maxInput?: HTMLInputElement) {
@@ -296,6 +364,9 @@ export class HomeComponent implements OnInit {
 
     clampActivities() {
         this.activities = this.masterActivites
+
+        this.filterActivities()
+
         for (let key in this.clampedUnits) {
             const min = this.clampedUnits[key as GraphType].min
             const max = this.clampedUnits[key as GraphType].max
@@ -331,4 +402,9 @@ export class HomeComponent implements OnInit {
         })
         return count
     }
+
+    reloadPage() {
+        location.reload()
+    }
 }
+

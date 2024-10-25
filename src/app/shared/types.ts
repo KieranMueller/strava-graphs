@@ -9,9 +9,6 @@ export type CreateGraphArgs = {
             width: number
         }
     }[]
-    options: {
-        aspectRatio: number
-    }
 }
 
 export type ClampedUnitsObj = { [key in GraphType]: { min: number | null, max: number | null } }
