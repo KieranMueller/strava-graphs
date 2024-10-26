@@ -92,8 +92,8 @@ export type Activity = {
     visibility: string
     flagged: boolean
     gear_id: string | null
-    start_latlng: [number, number]
-    end_latlng: [number, number]
+    start_latlng: [number, number] | []
+    end_latlng: [number, number] | []
     average_speed: number
     max_speed: number
     has_heartrate: boolean
@@ -111,26 +111,26 @@ export type Activity = {
 }
 
 export type Athlete = {
-    badge_type_id: number
-    bio: any
-    city: string | null
-    country: string
-    created_at: string
-    firstname: string
-    follower: any
-    friend: any
+    badge_type_id?: number
+    bio?: any
+    city?: string | null
+    country?: string
+    created_at?: string
+    firstname?: string
+    follower?: any
+    friend?: any
     id: number
-    lastname: string
-    premium: boolean
-    profile: string
-    profile_medium: string
-    resource_state: number
-    sex: string
-    state: string
-    summit: boolean
-    updated_at: string
-    username: string
-    weight: any
+    lastname?: string
+    premium?: boolean
+    profile?: string
+    profile_medium?: string
+    resource_state?: number
+    sex?: string
+    state?: string
+    summit?: boolean
+    updated_at?: string
+    username?: string
+    weight?: any
 }
 
 export type Map = {

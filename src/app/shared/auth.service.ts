@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { catchError, map, Observable, of } from 'rxjs'
+import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs'
 import { STRAVA_BASE_URL } from './env'
 import { environment } from '../../environments/environment'
 

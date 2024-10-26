@@ -5,16 +5,18 @@ import { CommonModule, DatePipe } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import Chart from 'chart.js/auto'
 import { mapValueAndUnitToDefaultValueAndUnit, METERS_SEC_TO_KMH, METERS_SEC_TO_METERS_SEC, METERS_SEC_TO_MPH, METERS_TO_FEET, METERS_TO_KILOMETERS, METERS_TO_METERS, METERS_TO_MILES, METERS_TO_YARDS, SECONDS_TO_HOURS, SECONDS_TO_MINUTES, SECONDS_TO_SECONDS } from '../../shared/units.util'
-import { LOCAL_STORAGE_SETTINGS_KEY, LOCAL_STORAGE_TOKEN_KEY } from '../../shared/env'
+import { LOCAL_STORAGE_IS_DEMO_MODE, LOCAL_STORAGE_SETTINGS_KEY, LOCAL_STORAGE_TOKEN_KEY } from '../../shared/env'
 import chartTrendline from "chartjs-plugin-trendline"
 import { BLUE, GREEN, GREY, ORANGE, PINK, YELLOW } from '../../shared/color.util'
 import { mapGraphTypeToActivityObjField } from '../../shared/graph.util'
+import { sampleActivities, sampleAthlete } from '../../shared/sample-data'
+import { NavComponent } from '../nav/nav.component'
 Chart.register(chartTrendline)
 
 @Component({
     selector: 'app-home',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, NavComponent],
     providers: [DatePipe],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
@@ -77,10 +79,13 @@ export class HomeComponent implements OnInit {
     isViewingAllActivities = true
     @ViewChildren('minInput') minInputs!: QueryList<ElementRef>
     @ViewChildren('maxInput') maxInputs!: QueryList<ElementRef>
+    isDemoMode = false
 
     constructor(private athleteService: AthleteService, private datePipe: DatePipe) { }
 
     ngOnInit() {
+        const isDemoMode = JSON.parse(localStorage.getItem(LOCAL_STORAGE_IS_DEMO_MODE)!)
+        if (isDemoMode) this.isDemoMode = true
         this.loadFromLocalStorage()
         this.getActivites()
     }
@@ -109,21 +114,30 @@ export class HomeComponent implements OnInit {
     }
 
     getActivites() {
-        this.athleteService.getAthleteActivities().subscribe({
-            next: (data: any) => {
-                console.log(data)
-                this.activities = data.reverse()
-                this.masterActivites = this.activities
-                if (this.selectedActivities.length > 0) {
-                    this.activities = this.activities.filter(activity =>
-                        this.selectedActivities.includes(activity.type as ActivityType) ||
-                        this.selectedActivities.includes(activity.sport_type as ActivityType))
+        if (this.isDemoMode) {
+            this.athlete = sampleAthlete
+            this.handleActivities(sampleActivities.reverse())
+        } else {
+            this.athleteService.getAthleteActivities().subscribe({
+                next: (data: any) => {
+                    console.log(data)
+                    this.handleActivities(data)
+                }, error: (e: any) => {
+                    console.log(e)
                 }
-                this.chooseGraph()
-            }, error: (e: any) => {
-                console.log(e)
-            }
-        })
+            })
+        }
+    }
+
+    handleActivities(activities: any) {
+        this.activities = activities.reverse()
+        this.masterActivites = this.activities
+        if (this.selectedActivities.length > 0) {
+            this.activities = this.activities.filter(activity =>
+                this.selectedActivities.includes(activity.type as ActivityType) ||
+                this.selectedActivities.includes(activity.sport_type as ActivityType))
+        }
+        this.chooseGraph()
     }
 
     getGraphTypeLabel(graphType: GraphType): string {
@@ -216,7 +230,18 @@ export class HomeComponent implements OnInit {
             },
             options: {
                 onClick: (event) => this.handleChartClickPoint(event),
-                aspectRatio: 2
+                aspectRatio: 2,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => {
+                                const dataPoint: any = context.raw
+                                const activity = this.activities[context.dataIndex]
+                                return [activity.name, `${context.dataset.label}: ${dataPoint.toFixed(2)}`]
+                            }
+                        }
+                    }
+                }
             },
         })
     }
@@ -226,12 +251,7 @@ export class HomeComponent implements OnInit {
         if (points.length) {
             const pointIndex = points[0].index
             const clickedDataPoint = this.chart.data.datasets[0].data[pointIndex]
-
-            console.log(clickedDataPoint)
-            console.log(pointIndex)
-            console.log(this.activities[pointIndex].id)
             this.activities.splice(pointIndex, 1)
-            console.log(this.activities)
             this.chooseGraph()
         }
     }
