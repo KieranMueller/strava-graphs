@@ -2,7 +2,9 @@ export type CreateGraphArgs = {
     datasets: {
         label: string,
         data: number[],
+        borderColor?: string,
         backgroundColor: string,
+        pointRadius?: number,
         trendlineLinear: {
             style: string,
             lineStyle: string,

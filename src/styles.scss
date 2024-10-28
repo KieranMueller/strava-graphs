@@ -1,8 +1,21 @@
-// * {
-//     color: white;
-//     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-// }
+:root {
+    --dark: #141413;
+    --grey: #21211f;
+    --light-grey: #c2c1bb;
+    --orange: #fc5200;
+  }
 
-// body {
-//     background-color: rgb(40, 40, 40);
-// }
+  @font-face {
+    font-family: Poppins;
+    src: url(../public/font/Poppins-Regular.ttf);
+  }
+
+  * {
+    font-family: Poppins, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  body {
+    background-color: var(--dark);
+    color: white;
+    font-family: Poppins, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }

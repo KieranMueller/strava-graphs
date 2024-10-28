@@ -2,6 +2,11 @@
     background-color: rgb(156, 156, 156);
 }
 
+.container {
+    padding: 10px;
+    margin-top: 10px;
+}
+
 .filters-div {
     display: flex;
 }
@@ -12,7 +17,9 @@
     padding: 10px;
     height: 200px;
     overflow-y: scroll;
-    border: 1px solid black;
+    border: 1px solid var(--light-grey);
+    margin-right: 20px;
+    padding: 5px 20px;
 }
 
 .flex {
@@ -35,4 +42,71 @@
 
 .ml-10 {
     margin-left: 10px;
+}
+
+.title {
+    font-size: 20px;
+    margin: 0;
+    margin-top: 10px;
+}
+
+.sub-title {
+    margin: 13px 0 4px 0;
+    font-size: 18px;
+}
+
+.tip {
+    font-size: 14px;
+    margin: 0;
+    color: var(--light-grey);
+}
+
+.orange {
+    color: var(--orange);
+}
+
+.light-grey {
+    color: var(--light-grey);
+}
+
+.clamp-div {
+    width: fit-content;
+}
+
+input {
+    accent-color: var(--orange);
+    outline: none;
+    border: none;
+    padding: 6px;
+    font-size: 18px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.subtext {
+    color: var(--light-grey);
+    font-size: 14px;
+    width: 300px;
+    margin: 0;
+    margin-top: 5px;
+}
+
+.orange-btn {
+    color: white;
+    background-color: var(--orange);
+    border: none;
+    outline: none;
+    padding: 6px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.tag {
+    font-size: 14px;
+    color: var(--light-grey);
+}
+
+.reset-points {
+    width: fit-content;
+    height: fit-content;
 }

@@ -7,7 +7,7 @@ import Chart from 'chart.js/auto'
 import { mapValueAndUnitToDefaultValueAndUnit, METERS_SEC_TO_KMH, METERS_SEC_TO_METERS_SEC, METERS_SEC_TO_MPH, METERS_TO_FEET, METERS_TO_KILOMETERS, METERS_TO_METERS, METERS_TO_MILES, METERS_TO_YARDS, SECONDS_TO_HOURS, SECONDS_TO_MINUTES, SECONDS_TO_SECONDS } from '../../shared/units.util'
 import { LOCAL_STORAGE_IS_DEMO_MODE, LOCAL_STORAGE_SETTINGS_KEY, LOCAL_STORAGE_TOKEN_KEY } from '../../shared/env'
 import chartTrendline from "chartjs-plugin-trendline"
-import { BLUE, GREEN, GREY, ORANGE, PINK, YELLOW } from '../../shared/color.util'
+import { BLUE, BLUE_LINE, GREEN, GREEN_LINE, GREY, GREY_LINE, ORANGE, ORANGE_LINE, PINK, PINK_LINE, YELLOW, YELLOW_LINE } from '../../shared/color.util'
 import { mapGraphTypeToActivityObjField } from '../../shared/graph.util'
 import { sampleActivities, sampleAthlete } from '../../shared/sample-data'
 import { NavComponent } from '../nav/nav.component'
@@ -127,6 +127,7 @@ export class HomeComponent implements OnInit {
                 }
             })
         }
+        console.log(this.activities)
     }
 
     handleActivities(activities: any) {
@@ -171,7 +172,10 @@ export class HomeComponent implements OnInit {
                     args.datasets.push({
                         label: `Average Speed (${this.selectedUnits.speed})`,
                         data: this.activities.map(activity => activity.average_speed * this.getUnitFactor('speed')),
-                        backgroundColor: BLUE, trendlineLinear: { style: BLUE, lineStyle: 'line', width: 2 }
+                        borderColor: ORANGE_LINE,
+                        backgroundColor: ORANGE,
+                        pointRadius: 5,
+                        trendlineLinear: { style: ORANGE, lineStyle: 'line', width: 2 },
                     })
                     break
                 }
@@ -179,7 +183,10 @@ export class HomeComponent implements OnInit {
                     args.datasets.push({
                         label: `Max Speed (${this.selectedUnits.speed})`,
                         data: this.activities.map(activity => activity.max_speed * this.getUnitFactor('speed')),
-                        backgroundColor: PINK, trendlineLinear: { style: PINK, lineStyle: 'line', width: 2 }
+                        borderColor: PINK_LINE,
+                        backgroundColor: PINK,
+                        pointRadius: 5,
+                        trendlineLinear: { style: PINK, lineStyle: 'line', width: 2 }
                     })
                     break
                 }
@@ -187,7 +194,10 @@ export class HomeComponent implements OnInit {
                     args.datasets.push({
                         label: `Distance (${this.selectedUnits.distance})`,
                         data: this.activities.map(activity => activity.distance * this.getUnitFactor('distance')),
-                        backgroundColor: GREEN, trendlineLinear: { style: GREEN, lineStyle: 'line', width: 2 }
+                        borderColor: GREEN_LINE,
+                        backgroundColor: GREEN,
+                        pointRadius: 5,
+                        trendlineLinear: { style: GREEN, lineStyle: 'line', width: 2 }
                     })
                     break
                 }
@@ -195,7 +205,10 @@ export class HomeComponent implements OnInit {
                     args.datasets.push({
                         label: `Elapsed Time (${this.selectedUnits.time})`,
                         data: this.activities.map(activity => activity.elapsed_time * this.getUnitFactor('time')),
-                        backgroundColor: ORANGE, trendlineLinear: { style: ORANGE, lineStyle: 'line', width: 2 }
+                        borderColor: BLUE_LINE,
+                        backgroundColor: BLUE,
+                        pointRadius: 5,
+                        trendlineLinear: { style: BLUE, lineStyle: 'line', width: 2 }
                     })
                     break
                 }
@@ -203,7 +216,10 @@ export class HomeComponent implements OnInit {
                     args.datasets.push({
                         label: `Moving Time (${this.selectedUnits.time})`,
                         data: this.activities.map(activity => activity.moving_time * this.getUnitFactor('time')),
-                        backgroundColor: YELLOW, trendlineLinear: { style: YELLOW, lineStyle: 'line', width: 2 }
+                        borderColor: YELLOW_LINE,
+                        backgroundColor: YELLOW,
+                        pointRadius: 5,
+                        trendlineLinear: { style: YELLOW, lineStyle: 'line', width: 2 }
                     })
                     break
                 }
@@ -211,7 +227,10 @@ export class HomeComponent implements OnInit {
                     args.datasets.push({
                         label: `Elevation Gain (${this.selectedUnits.elevation})`,
                         data: this.activities.map(activity => activity.total_elevation_gain * this.getUnitFactor('elevation')),
-                        backgroundColor: GREY, trendlineLinear: { style: GREY, lineStyle: 'line', width: 2 }
+                        borderColor: GREY_LINE,
+                        backgroundColor: GREY,
+                        pointRadius: 5,
+                        trendlineLinear: { style: GREY, lineStyle: 'line', width: 2 }
                     })
                     break
                 }
@@ -231,7 +250,13 @@ export class HomeComponent implements OnInit {
             options: {
                 onClick: (event) => this.handleChartClickPoint(event),
                 aspectRatio: 2,
+                responsive: true,
                 plugins: {
+                    legend: {
+                        labels: {
+                            color: 'rgba(255, 255, 255)'
+                        }
+                    },
                     tooltip: {
                         callbacks: {
                             label: (context) => {
@@ -241,6 +266,24 @@ export class HomeComponent implements OnInit {
                             }
                         }
                     }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: '#21211f',
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255)'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: '#21211f',
+                        },
+                        ticks: {
+                            color: 'rgba(255, 255, 255)'
+                        }
+                    },
                 }
             },
         })

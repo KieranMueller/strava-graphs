@@ -1,7 +1,11 @@
-<div>
+<div class="bar">
     <div>
-        <p>Username: {{athlete().username}}</p>
-        <p>Hello {{athlete().firstname}} {{athlete().lastname}}</p>
+        <p class="username">Username: <span class="light-grey">{{athlete().username}}</span></p>
+        <p class="greeting">Hello <span class="light-grey">{{athlete().firstname}} {{athlete().lastname}}!</span></p>
+    </div>
+    <div>
+        <h1 class="title">Performance Graphs</h1>
+        <p class="light-grey">(by Kieran M.)</p>
     </div>
     <div>
         <button (click)="logout()">Logout</button>
