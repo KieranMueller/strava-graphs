@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core'
+import { Component, ElementRef, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core'
 import { Activity, ActivityType, ActivityTypeObj, AllUnits, Athlete, AvailableUnitsObj, ClampedUnitsObj, CreateGraphArgs, GraphType, SelectedUnitsObj, UnitTypes } from '../../shared/types'
 import { AthleteService } from '../../shared/athlete.service'
 import { CommonModule, DatePipe } from '@angular/common'
@@ -80,6 +80,7 @@ export class HomeComponent implements OnInit {
     @ViewChildren('minInput') minInputs!: QueryList<ElementRef>
     @ViewChildren('maxInput') maxInputs!: QueryList<ElementRef>
     isDemoMode = false
+    scrollPosition = 0
 
     constructor(private athleteService: AthleteService, private datePipe: DatePipe) { }
 
@@ -88,6 +89,11 @@ export class HomeComponent implements OnInit {
         if (isDemoMode) this.isDemoMode = true
         this.loadFromLocalStorage()
         this.getActivites()
+    }
+
+    @HostListener('window:scroll', [])
+    onWindowScroll() {
+        this.scrollPosition = document.documentElement.scrollTop || document.body.scrollTop
     }
 
     loadFromLocalStorage() {
@@ -159,6 +165,12 @@ export class HomeComponent implements OnInit {
         this.chooseGraph()
     }
 
+    handleScrollPosition() {
+        window.scrollTo({
+            top: this.scrollPosition,
+        })
+    }
+
     chooseGraph() {
         if (this.chart) this.chart.destroy()
 
@@ -169,8 +181,9 @@ export class HomeComponent implements OnInit {
         for (let graphType of this.graphTypes) {
             switch (graphType) {
                 case 'avgSpeed': {
+                    const slope = this.calculateSlope(this.activities.map(activity => activity.start_date), this.activities.map(activity => activity.average_speed))
                     args.datasets.push({
-                        label: `Average Speed (${this.selectedUnits.speed})`,
+                        label: `Average Speed (${this.selectedUnits.speed}) ${slope.toFixed(2)}`,
                         data: this.activities.map(activity => activity.average_speed * this.getUnitFactor('speed')),
                         borderColor: ORANGE_LINE,
                         backgroundColor: ORANGE,
@@ -180,8 +193,9 @@ export class HomeComponent implements OnInit {
                     break
                 }
                 case 'maxSpeed': {
+                    const slope = this.calculateSlope(this.activities.map(activity => activity.start_date), this.activities.map(activity => activity.max_speed))
                     args.datasets.push({
-                        label: `Max Speed (${this.selectedUnits.speed})`,
+                        label: `Max Speed (${this.selectedUnits.speed}) ${slope.toFixed(2)}`,
                         data: this.activities.map(activity => activity.max_speed * this.getUnitFactor('speed')),
                         borderColor: PINK_LINE,
                         backgroundColor: PINK,
@@ -191,8 +205,9 @@ export class HomeComponent implements OnInit {
                     break
                 }
                 case 'distance': {
+                    const slope = this.calculateSlope(this.activities.map(activity => activity.start_date), this.activities.map(activity => activity.distance))
                     args.datasets.push({
-                        label: `Distance (${this.selectedUnits.distance})`,
+                        label: `Distance (${this.selectedUnits.distance}) ${slope.toFixed(2)}`,
                         data: this.activities.map(activity => activity.distance * this.getUnitFactor('distance')),
                         borderColor: GREEN_LINE,
                         backgroundColor: GREEN,
@@ -202,8 +217,9 @@ export class HomeComponent implements OnInit {
                     break
                 }
                 case 'elapsedTime': {
+                    const slope = this.calculateSlope(this.activities.map(activity => activity.start_date), this.activities.map(activity => activity.elapsed_time))
                     args.datasets.push({
-                        label: `Elapsed Time (${this.selectedUnits.time})`,
+                        label: `Elapsed Time (${this.selectedUnits.time}) ${slope.toFixed(2)}`,
                         data: this.activities.map(activity => activity.elapsed_time * this.getUnitFactor('time')),
                         borderColor: BLUE_LINE,
                         backgroundColor: BLUE,
@@ -213,8 +229,9 @@ export class HomeComponent implements OnInit {
                     break
                 }
                 case 'movingTime': {
+                    const slope = this.calculateSlope(this.activities.map(activity => activity.start_date), this.activities.map(activity => activity.moving_time))
                     args.datasets.push({
-                        label: `Moving Time (${this.selectedUnits.time})`,
+                        label: `Moving Time (${this.selectedUnits.time}) ${slope.toFixed(2)}`,
                         data: this.activities.map(activity => activity.moving_time * this.getUnitFactor('time')),
                         borderColor: YELLOW_LINE,
                         backgroundColor: YELLOW,
@@ -224,8 +241,9 @@ export class HomeComponent implements OnInit {
                     break
                 }
                 case 'elevationGain': {
+                    const slope = this.calculateSlope(this.activities.map(activity => activity.start_date), this.activities.map(activity => activity.total_elevation_gain))
                     args.datasets.push({
-                        label: `Elevation Gain (${this.selectedUnits.elevation})`,
+                        label: `Elevation Gain (${this.selectedUnits.elevation}) ${slope.toFixed(2)}`,
                         data: this.activities.map(activity => activity.total_elevation_gain * this.getUnitFactor('elevation')),
                         borderColor: GREY_LINE,
                         backgroundColor: GREY,
@@ -239,6 +257,37 @@ export class HomeComponent implements OnInit {
         this.createChart(args)
     }
 
+    calculateSlope(dates: string[], data: number[]): number {
+        const n = dates.length
+        if (n < 2) return 0 // Not enough data points to calculate a slope
+
+        // Convert dates to timestamps, then normalize to days since the first date
+        const startTime = new Date(dates[0]).getTime()
+        const daysSinceStart = dates.map(date => (new Date(date).getTime() - startTime) / (1000 * 60 * 60 * 24))
+
+        // Calculate sums
+        const sumX = daysSinceStart.reduce((sum, x) => sum + x, 0)
+        const sumY = data.reduce((sum, y) => sum + y, 0)
+        const sumXY = daysSinceStart.reduce((sum, x, i) => sum + x * data[i], 0)
+        const sumX2 = daysSinceStart.reduce((sum, x) => sum + x * x, 0)
+
+        // Apply the formula for the slope
+        const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX)
+        // slope number is really small otherwise
+        let amplifyFactor = 1
+        if (Math.abs(slope) < 0.1) {
+            amplifyFactor = 100
+        }
+        else if (Math.abs(slope) < 1) {
+            amplifyFactor = 10
+        } else if (Math.abs(slope) > 100) {
+            amplifyFactor = 0.01
+        } else if (Math.abs(slope) > 10) {
+            amplifyFactor = 0.1
+        }
+        return slope * amplifyFactor
+    }
+
     createChart(args: CreateGraphArgs) {
         this.chart = new Chart('MyChart', {
             type: 'line',
@@ -249,7 +298,7 @@ export class HomeComponent implements OnInit {
             },
             options: {
                 onClick: (event) => this.handleChartClickPoint(event),
-                aspectRatio: 2,
+                aspectRatio: 1.5,
                 responsive: true,
                 plugins: {
                     legend: {
@@ -287,6 +336,7 @@ export class HomeComponent implements OnInit {
                 }
             },
         })
+        this.handleScrollPosition()
     }
 
     handleChartClickPoint(event: any) {

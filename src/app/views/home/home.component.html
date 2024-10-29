@@ -78,6 +78,7 @@
         @if (athlete && activities.length > 0) {
             @for (graphType of availableGraphTypes; track graphType) {
                 <button
+                    class="graph-btn"
                     [ngClass]="{selected: graphTypes.includes(graphType)}"
                     (click)="addOrRemoveGraphType(graphType)">
                     {{getGraphTypeLabel(graphType)}}
