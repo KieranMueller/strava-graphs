@@ -13,7 +13,7 @@
     padding: 10px;
     height: 200px;
     overflow-y: scroll;
-    border: 1px solid var(--light-grey);
+    border: 3px solid var(--light-grey);
     margin-right: 20px;
     padding: 5px 20px;
 
@@ -68,10 +68,6 @@
     font-size: 14px;
     margin: 0;
     color: var(--light-grey);
-}
-
-.orange {
-    color: var(--orange);
 }
 
 .light-grey {
@@ -206,6 +202,13 @@ input {
     .orange-btn {
         padding: 3px 7px;
         font-size: 11px;
+    }
+}
+
+@media screen and (max-width: 720px) {
+    input {
+        padding: 3px;
+        font-size: 0.8rem;
     }
 }
 

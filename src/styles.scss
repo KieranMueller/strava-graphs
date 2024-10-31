@@ -44,3 +44,13 @@
 .mb-20 {
     margin-bottom: 20px;
 }
+
+.orange {
+    color: var(--orange);
+}
+
+.orange-fade {
+    background-image: linear-gradient(to right, var(--orange), white);
+    color: transparent;
+    background-clip: text;
+}
