@@ -20,4 +20,8 @@ export class NavComponent {
         localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY)
         this.router.navigateByUrl('/login')
     }
+
+    about() {
+        this.router.navigateByUrl('/about')
+    }
 }

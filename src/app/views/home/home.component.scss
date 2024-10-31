@@ -139,3 +139,84 @@ input {
 .selected {
     background-color: var(--light-grey);
 }
+
+.bg-orange {
+    background-color: var(--orange);
+    color: white;
+}
+
+.block {
+    display: block;
+}
+
+@media screen and (max-width: 980px) {
+    
+    .dropdown {
+        font-size: 14px;
+    }
+
+    .title {
+        font-size: 18px;
+    }
+
+    .tip {
+        font-size: 12px;
+    }
+
+    .subtext {
+        font-size: 12px;
+    }
+
+    .sub-title {
+        font-size: 16px;
+    }
+
+    input {
+        padding: 4px;
+        font-size: 16px;
+    }
+
+    .orange-btn {
+        padding: 3px 7px;
+        font-size: 13px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+
+    .container {
+        padding-right: 0;
+    }
+    
+    .dropdown {
+        font-size: 12px;
+        margin-right: 10px;
+        padding: 2px 10px;
+    }
+
+    .title {
+        font-size: 16px;
+    }
+
+    .tip {
+        font-size: 10px;
+    }
+
+    .subtext {
+        font-size: 10px;
+    }
+
+    .sub-title {
+        font-size: 14px;
+    }
+
+    input {
+        padding: 4px;
+        font-size: 14px;
+    }
+
+    .orange-btn {
+        padding: 3px 7px;
+        font-size: 11px;
+    }
+}

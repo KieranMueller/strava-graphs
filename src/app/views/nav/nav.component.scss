@@ -34,6 +34,17 @@ button {
     font-size: 20px;
 }
 
+.about-btn {
+    margin-bottom: 3px;
+    font-size: 20px;
+    background-color: var(--grey);
+}
+
+.btn-div {
+    display: flex;
+    flex-direction: column;
+}
+
 @media screen and (max-width: 560px) {
     .bar {
         padding: 5px 10px;
@@ -54,7 +65,7 @@ button {
         font-size: 24px;
     }
 
-    .logout-btn {
+    .logout-btn, .about-btn {
         font-size: 16px;
     }
 }

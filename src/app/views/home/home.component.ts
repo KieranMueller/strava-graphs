@@ -81,19 +81,40 @@ export class HomeComponent implements OnInit {
     @ViewChildren('maxInput') maxInputs!: QueryList<ElementRef>
     isDemoMode = false
     scrollPosition = 0
+    clickPointToRemove = false
+    screenWidth = 0
+    screenHeight = 0
 
     constructor(private athleteService: AthleteService, private datePipe: DatePipe) { }
 
     ngOnInit() {
+        this.screenWidth = window.innerWidth
+        this.screenHeight = window.innerHeight
         const isDemoMode = JSON.parse(localStorage.getItem(LOCAL_STORAGE_IS_DEMO_MODE)!)
         if (isDemoMode) this.isDemoMode = true
         this.loadFromLocalStorage()
         this.getActivites()
     }
 
-    @HostListener('window:scroll', [])
+    @HostListener('window:scroll')
     onWindowScroll() {
         this.scrollPosition = document.documentElement.scrollTop || document.body.scrollTop
+    }
+
+    @HostListener('window:resize')
+    handleScreenResize() {
+        // calling on certain intervals instead of every change to reduce calls
+        // --> don't want chooseGraph to fire every time mobile top bar collapses/expands
+        let widthDiff = window.innerWidth - this.screenWidth
+        let heightDiff = window.innerHeight - this.screenHeight
+        if (Math.abs(widthDiff) > 20) {
+            this.chooseGraph()
+            this.screenWidth = window.innerWidth
+        }
+        if (Math.abs(heightDiff) > 50) {
+            this.chooseGraph()
+            this.screenHeight = window.innerHeight
+        }
     }
 
     loadFromLocalStorage() {
@@ -133,7 +154,6 @@ export class HomeComponent implements OnInit {
                 }
             })
         }
-        console.log(this.activities)
     }
 
     handleActivities(activities: any) {
@@ -309,9 +329,10 @@ export class HomeComponent implements OnInit {
                     tooltip: {
                         callbacks: {
                             label: (context) => {
+                                const label = context.dataset.label
                                 const dataPoint: any = context.raw
                                 const activity = this.activities[context.dataIndex]
-                                return [activity.name, `${context.dataset.label}: ${dataPoint.toFixed(2)}`]
+                                return [activity.name, `${label?.substring(0, label.indexOf(')') + 1)}: ${dataPoint.toFixed(2)}`]
                             }
                         }
                     }
@@ -340,6 +361,7 @@ export class HomeComponent implements OnInit {
     }
 
     handleChartClickPoint(event: any) {
+        if (!this.clickPointToRemove) return
         const points = this.chart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true)
         if (points.length) {
             const pointIndex = points[0].index
@@ -496,6 +518,21 @@ export class HomeComponent implements OnInit {
             case 'distance': return this.selectedUnits.distance
             case 'elapsedTime': case 'movingTime': return this.selectedUnits.time
             case 'elevationGain': return this.selectedUnits.elevation
+        }
+    }
+
+    getShortOrLongUnitFromGraphType(graphType: GraphType): string {
+        const unit = this.getSelectedUnitFromGraphType(graphType)
+        if (window.innerWidth > 900) return unit
+        switch (unit) {
+            case 'kilometers': return 'km'
+            case 'meters': return 'm'
+            case 'hours': return 'hr'
+            case 'minutes': return 'min'
+            case 'seconds': return 'sec'
+            case 'feet': return 'ft'
+            case 'yards': return 'yds'
+            default: return unit
         }
     }
 

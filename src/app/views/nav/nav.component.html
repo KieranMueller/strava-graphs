@@ -1,13 +1,16 @@
 <div class="bar">
-    <div>
-        <p class="username">Username: <span class="light-grey">{{athlete().username}}</span></p>
-        <p class="greeting">Hello <span class="light-grey">{{athlete().firstname}} {{athlete().lastname}}!</span></p>
-    </div>
+    @if (athlete()) {
+        <div>
+            <p class="username">Username: <span class="light-grey">{{athlete().username}}</span></p>
+            <p class="greeting">Hello <span class="light-grey">{{athlete().firstname}} {{athlete().lastname}}!</span></p>
+        </div>
+    }
     <div>
         <h1 class="title">Performance Graphs</h1>
         <p class="light-grey">(by Kieran M.)</p>
     </div>
-    <div>
+    <div class="btn-div">
+        <button class="about-btn" (click)="about()">About</button>
         <button class="logout-btn" (click)="logout()">Logout</button>
     </div>
 </div>

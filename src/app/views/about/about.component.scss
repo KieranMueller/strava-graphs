@@ -1,0 +1,40 @@
+.container {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.btn {
+    background-color: white;
+    border: none;
+    color: black;
+    outline: none;
+    padding: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin: 1px;
+    margin-bottom: 10px;
+    &:focus-visible {
+        transition: 0s;
+        outline: 3px solid var(--orange);
+        z-index: 1;
+    }
+}
+
+.section {
+    width: 60vw;
+    margin-bottom: 10px;
+}
+
+.img {
+    width: 70vw;
+}
+
+@media screen and (max-width: 644px) {
+    .section {
+        width: 90vw;
+    }
+
+    .img {
+        width: 90vw;
+    }
+}

@@ -62,16 +62,15 @@
                     <p class="sub-title">{{getGraphTypeLabel(graphType)}}</p>
                     <div class="flex">
                         <input #minInput [id]="graphType" class="range" type="number" (input)="clampUnits(graphType, 'min', $event, getSelectedUnitFromGraphType(graphType))">
-                        <span class="ml-5 tag">{{getSelectedUnitFromGraphType(graphType)}}</span>
+                        <span class="ml-5 tag">{{getShortOrLongUnitFromGraphType(graphType)}}</span>
                         <p class="m-10">to</p>
                         <input #maxInput [id]="graphType" class="range" type="number" (input)="clampUnits(graphType, 'max', $event, getSelectedUnitFromGraphType(graphType))">
-                        <span class="ml-5 tag">{{getSelectedUnitFromGraphType(graphType)}}</span>
+                        <span class="ml-5 tag">{{getShortOrLongUnitFromGraphType(graphType)}}</span>
                         <button class="ml-10 orange-btn" (click)="clampUnits(graphType, null, $event, getSelectedUnitFromGraphType(graphType), true, minInput, maxInput)">Reset</button>
                     </div>
                 </div>
             }
         </div>
-        <button class="reset-points orange-btn" (click)="reloadPage()">Reset Deleted Points</button>
     </div>
     <p>Select Graphs</p>
     <div>
@@ -87,6 +86,10 @@
         } @else {
             <p>Loading...</p>
         }
+        <div>
+            <button class="graph-btn bg-orange" (click)="reloadPage()">Reset Deleted Points</button>
+            <button class="graph-btn bg-orange" (click)="clickPointToRemove = !clickPointToRemove">Click Point to Delete: {{clickPointToRemove ? 'ON' : 'OFF'}}</button>
+        </div>
     </div>
     <div class="chart-container">
         <canvas id="MyChart" >{{ chart }}</canvas>
