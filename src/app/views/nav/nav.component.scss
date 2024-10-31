@@ -32,17 +32,39 @@ button {
 
 .logout-btn {
     font-size: 20px;
+    transition: 0.2s;
+    &:hover {
+        background-color: var(--orange-hover);
+    }
 }
 
 .about-btn {
     margin-bottom: 3px;
     font-size: 20px;
     background-color: var(--grey);
+    transition: 0.2s;
+    &:hover {
+        background-color: var(--grey-hover);
+    }
 }
 
 .btn-div {
     display: flex;
     flex-direction: column;
+}
+
+@media screen and (max-width: 700px) {
+    .about-btn {
+        &:hover {
+            background-color: var(--grey);
+        }
+    }
+
+    .logout-btn {
+        &:hover {
+            background-color: var(--orange);
+        }
+    }
 }
 
 @media screen and (max-width: 560px) {

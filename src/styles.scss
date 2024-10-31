@@ -1,8 +1,11 @@
 :root {
     --dark: #141413;
     --grey: #343431;
+    --grey-hover: #282826;
     --light-grey: #c2c1bb;
     --orange: #fc5200;
+    --orange-hover: #d04500;
+    --white-hover: #d5d5d5;
   }
 
   @font-face {
@@ -19,4 +22,25 @@
     background-color: var(--dark);
     color: white;
     font-family: Poppins, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
   }
+
+  .graph-btn {
+    background-color: white;
+    border: none;
+    color: black;
+    outline: none;
+    padding: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    margin: 1px;
+    &:focus-visible {
+        transition: 0s;
+        outline: 3px solid var(--orange);
+        z-index: 1;
+    }
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
