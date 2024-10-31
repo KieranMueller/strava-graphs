@@ -1,0 +1,13 @@
+<div class="container">
+    <div cdkDrag class="outer">
+        <img class="x" src="../../../../x.svg" alt="close settings modal icon" (click)="close()">
+        <p class="title">Advanced Settings<span class="tip">(Drag me!)</span></p>
+        <label for="point-radius">Point Radius</label>
+        <input id="point-radius" type="number" (input)="updateSettings($event, 'pointRadius')" [value]="advancedSettings.pointRadius">
+        <label for="trend-line-width">Trend Line Width</label>
+        <input id="trend-line-width" type="number" (input)="updateSettings($event, 'trendlineWidth')" [value]="advancedSettings.trendlineWidth">
+        <label for="aspect-ratio">Aspect Ratio</label>
+        <input id="aspect-ratio" type="number" (input)="updateSettings($event, 'aspectRatio')" [value]="advancedSettings.aspectRatio">
+        <button class="graph-btn btn" (click)="reset()">Reset to Defaults</button>
+    </div>
+</div>

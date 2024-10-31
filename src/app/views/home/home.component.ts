@@ -5,18 +5,20 @@ import { CommonModule, DatePipe } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import Chart from 'chart.js/auto'
 import { mapValueAndUnitToDefaultValueAndUnit, METERS_SEC_TO_KMH, METERS_SEC_TO_METERS_SEC, METERS_SEC_TO_MPH, METERS_TO_FEET, METERS_TO_KILOMETERS, METERS_TO_METERS, METERS_TO_MILES, METERS_TO_YARDS, SECONDS_TO_HOURS, SECONDS_TO_MINUTES, SECONDS_TO_SECONDS } from '../../shared/units.util'
-import { LOCAL_STORAGE_IS_DEMO_MODE, LOCAL_STORAGE_SETTINGS_KEY, LOCAL_STORAGE_TOKEN_KEY } from '../../shared/env'
+import { LOCAL_STORAGE_ADV_SETTINGS, LOCAL_STORAGE_IS_DEMO_MODE, LOCAL_STORAGE_SETTINGS_KEY, LOCAL_STORAGE_TOKEN_KEY } from '../../shared/env'
 import chartTrendline from "chartjs-plugin-trendline"
 import { BLUE, BLUE_LINE, GREEN, GREEN_LINE, GREY, GREY_LINE, ORANGE, ORANGE_LINE, PINK, PINK_LINE, YELLOW, YELLOW_LINE } from '../../shared/color.util'
 import { mapGraphTypeToActivityObjField } from '../../shared/graph.util'
 import { sampleActivities, sampleAthlete } from '../../shared/sample-data'
 import { NavComponent } from '../nav/nav.component'
+import { AdvancedSettingsModalComponent } from '../../components/advanced-settings-modal/advanced-settings-modal.component'
+import { SettingsService } from '../../shared/settings.service'
 Chart.register(chartTrendline)
 
 @Component({
     selector: 'app-home',
     standalone: true,
-    imports: [CommonModule, FormsModule, NavComponent],
+    imports: [CommonModule, FormsModule, NavComponent, AdvancedSettingsModalComponent],
     providers: [DatePipe],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
@@ -84,14 +86,21 @@ export class HomeComponent implements OnInit {
     clickPointToRemove = false
     screenWidth = 0
     screenHeight = 0
+    advancedSettings = {
+        pointRadius: 5,
+        trendlineWidth: 2,
+        aspectRatio: 1.5
+    }
+    openAdvancedSettings = false
 
-    constructor(private athleteService: AthleteService, private datePipe: DatePipe) { }
+    constructor(private athleteService: AthleteService, private datePipe: DatePipe, private settingsService: SettingsService) { }
 
     ngOnInit() {
         this.screenWidth = window.innerWidth
         this.screenHeight = window.innerHeight
         const isDemoMode = JSON.parse(localStorage.getItem(LOCAL_STORAGE_IS_DEMO_MODE)!)
         if (isDemoMode) this.isDemoMode = true
+        this.loadSettings()
         this.loadFromLocalStorage()
         this.getActivites()
     }
@@ -115,6 +124,33 @@ export class HomeComponent implements OnInit {
             this.chooseGraph()
             this.screenHeight = window.innerHeight
         }
+    }
+
+    loadSettings() {
+        const settings = JSON.parse(localStorage.getItem(LOCAL_STORAGE_ADV_SETTINGS)!)
+        if (settings) {
+            this.settingsService.pointRadius.next(settings.pointRadius)
+            this.settingsService.trendlineWidth.next(settings.trendlineWidth)
+            this.settingsService.aspectRatio.next(settings.aspectRatio)
+        }
+        this.settingsService.pointRadius.subscribe({
+            next: value => {
+                this.advancedSettings.pointRadius = value
+                this.chooseGraph()
+            }
+        })
+        this.settingsService.trendlineWidth.subscribe({
+            next: value => {
+                this.advancedSettings.trendlineWidth = value
+                this.chooseGraph()
+            }
+        })
+        this.settingsService.aspectRatio.subscribe({
+            next: value => {
+                this.advancedSettings.aspectRatio = value
+                this.chooseGraph()
+            }
+        })
     }
 
     loadFromLocalStorage() {
@@ -207,8 +243,8 @@ export class HomeComponent implements OnInit {
                         data: this.activities.map(activity => activity.average_speed * this.getUnitFactor('speed')),
                         borderColor: ORANGE_LINE,
                         backgroundColor: ORANGE,
-                        pointRadius: 5,
-                        trendlineLinear: { style: ORANGE, lineStyle: 'line', width: 2 },
+                        pointRadius: this.advancedSettings.pointRadius,
+                        trendlineLinear: { style: ORANGE, lineStyle: 'line', width: this.advancedSettings.trendlineWidth },
                     })
                     break
                 }
@@ -219,8 +255,8 @@ export class HomeComponent implements OnInit {
                         data: this.activities.map(activity => activity.max_speed * this.getUnitFactor('speed')),
                         borderColor: PINK_LINE,
                         backgroundColor: PINK,
-                        pointRadius: 5,
-                        trendlineLinear: { style: PINK, lineStyle: 'line', width: 2 }
+                        pointRadius: this.advancedSettings.pointRadius,
+                        trendlineLinear: { style: PINK, lineStyle: 'line', width: this.advancedSettings.trendlineWidth }
                     })
                     break
                 }
@@ -231,8 +267,8 @@ export class HomeComponent implements OnInit {
                         data: this.activities.map(activity => activity.distance * this.getUnitFactor('distance')),
                         borderColor: GREEN_LINE,
                         backgroundColor: GREEN,
-                        pointRadius: 5,
-                        trendlineLinear: { style: GREEN, lineStyle: 'line', width: 2 }
+                        pointRadius: this.advancedSettings.pointRadius,
+                        trendlineLinear: { style: GREEN, lineStyle: 'line', width: this.advancedSettings.trendlineWidth }
                     })
                     break
                 }
@@ -243,8 +279,8 @@ export class HomeComponent implements OnInit {
                         data: this.activities.map(activity => activity.elapsed_time * this.getUnitFactor('time')),
                         borderColor: BLUE_LINE,
                         backgroundColor: BLUE,
-                        pointRadius: 5,
-                        trendlineLinear: { style: BLUE, lineStyle: 'line', width: 2 }
+                        pointRadius: this.advancedSettings.pointRadius,
+                        trendlineLinear: { style: BLUE, lineStyle: 'line', width: this.advancedSettings.trendlineWidth }
                     })
                     break
                 }
@@ -255,8 +291,8 @@ export class HomeComponent implements OnInit {
                         data: this.activities.map(activity => activity.moving_time * this.getUnitFactor('time')),
                         borderColor: YELLOW_LINE,
                         backgroundColor: YELLOW,
-                        pointRadius: 5,
-                        trendlineLinear: { style: YELLOW, lineStyle: 'line', width: 2 }
+                        pointRadius: this.advancedSettings.pointRadius,
+                        trendlineLinear: { style: YELLOW, lineStyle: 'line', width: this.advancedSettings.trendlineWidth }
                     })
                     break
                 }
@@ -267,8 +303,8 @@ export class HomeComponent implements OnInit {
                         data: this.activities.map(activity => activity.total_elevation_gain * this.getUnitFactor('elevation')),
                         borderColor: GREY_LINE,
                         backgroundColor: GREY,
-                        pointRadius: 5,
-                        trendlineLinear: { style: GREY, lineStyle: 'line', width: 2 }
+                        pointRadius: this.advancedSettings.pointRadius,
+                        trendlineLinear: { style: GREY, lineStyle: 'line', width: this.advancedSettings.trendlineWidth }
                     })
                     break
                 }
@@ -318,7 +354,7 @@ export class HomeComponent implements OnInit {
             },
             options: {
                 onClick: (event) => this.handleChartClickPoint(event),
-                aspectRatio: 1.5,
+                aspectRatio: this.advancedSettings.aspectRatio,
                 responsive: true,
                 plugins: {
                     legend: {
@@ -556,5 +592,8 @@ export class HomeComponent implements OnInit {
     reloadPage() {
         location.reload()
     }
-}
 
+    closeAdvancedSettings() {
+        this.openAdvancedSettings = false
+    }
+}

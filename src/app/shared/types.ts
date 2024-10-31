@@ -22,6 +22,8 @@ export type AvailableUnitsObj = {
     elevation: ElevationUnits[]
 }
 
+export type AdvancedSettings = 'pointRadius' | 'trendlineWidth' | 'aspectRatio'
+
 export type SelectedUnitsObj = { [key in UnitTypes]: AllUnits }
 
 export type UnitTypes = 'speed' | 'distance' | 'time' | 'elevation'

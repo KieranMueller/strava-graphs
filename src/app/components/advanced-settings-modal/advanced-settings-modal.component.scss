@@ -1,0 +1,59 @@
+.container {
+    background-color: rgba(0, 0, 0, 0.424);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.outer {
+    border: 3px solid var(--light-grey);
+    border-radius: 20px;
+    background-color: var(--dark);
+    padding: 30px;
+    width: fit-content;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.tip {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--light-grey);
+}
+
+label {
+ margin-bottom: 2px; 
+}
+
+.title {
+    font-size: 1.5rem;
+}
+
+input {
+    width: 30%;
+    padding: 8px;
+    border-radius: 10px;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: black;
+}
+
+.x {
+    width: 2rem;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.btn {
+    margin-top: 10px;
+    width: fit-content;
+    font-size: 1rem;
+}

@@ -1,3 +1,6 @@
+@if (openAdvancedSettings) {
+    <app-advanced-settings-modal (closeEmitter)="closeAdvancedSettings()"></app-advanced-settings-modal>
+}
 <app-nav [athlete]="athlete!"></app-nav>
 <div class="container">
     <div class="filters-div">
@@ -89,6 +92,7 @@
         <div>
             <button class="graph-btn bg-orange" (click)="reloadPage()">Reset Deleted Points</button>
             <button class="graph-btn bg-orange" (click)="clickPointToRemove = !clickPointToRemove">Click Point to Delete: {{clickPointToRemove ? 'ON' : 'OFF'}}</button>
+            <button class="graph-btn bg-orange" (click)="openAdvancedSettings = true">Advanced Settings</button>
         </div>
     </div>
     <div class="chart-container">
