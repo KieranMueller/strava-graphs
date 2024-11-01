@@ -19,6 +19,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    opacity: 0.9;
 }
 
 .tip {
@@ -56,4 +57,10 @@ input {
     margin-top: 10px;
     width: fit-content;
     font-size: 1rem;
+}
+
+@media screen and (max-width: 380px) {
+    .outer {
+        width: 50%;
+    }
 }

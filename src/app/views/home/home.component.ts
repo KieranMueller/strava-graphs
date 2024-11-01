@@ -92,6 +92,7 @@ export class HomeComponent implements OnInit {
         aspectRatio: 1.5
     }
     openAdvancedSettings = false
+    showFilters = true
 
     constructor(private athleteService: AthleteService, private datePipe: DatePipe, private settingsService: SettingsService) { }
 

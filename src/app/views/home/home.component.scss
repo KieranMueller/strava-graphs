@@ -5,6 +5,9 @@
 
 .filters-div {
     display: flex;
+    .two-sections {
+        display: flex;
+    }
 }
 
 .dropdown {
@@ -167,10 +170,6 @@ input {
 }
 
 @media screen and (max-width: 900px) {
-
-    .container {
-        padding-right: 0;
-    }
     
     .dropdown {
         font-size: 12px;
@@ -217,5 +216,46 @@ input {
         &:hover {
             background-color: var(--orange);
         }
+    }
+
+    .dropdown {
+        .subtext {
+            width: 200px;
+        }
+        input {
+            width: 40px;
+        }
+        span {
+            font-size: 12px;
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .filters-div {
+        flex-direction: column;
+    }
+
+    .dropdown {
+        margin-bottom: 10px;
+        width: fit-content;
+        input {
+            margin: 0;
+        }
+    }
+
+    .graph-dropdown {
+        margin-bottom: 0;
+    }
+
+    .sub-title {
+        margin: 8px 0 2px 0;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .graph-dropdown {
+        margin-right: 0;
+        width: 85%;
     }
 }
