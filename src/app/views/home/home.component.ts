@@ -121,7 +121,7 @@ export class HomeComponent implements OnInit {
             this.chooseGraph()
             this.screenWidth = window.innerWidth
         }
-        if (Math.abs(heightDiff) > 50) {
+        if (Math.abs(heightDiff) > 150) {
             this.chooseGraph()
             this.screenHeight = window.innerHeight
         }
@@ -135,7 +135,7 @@ export class HomeComponent implements OnInit {
             this.settingsService.aspectRatio.next(settings.aspectRatio)
         }
         this.settingsService.pointRadius.subscribe({
-            next: value => {
+            next: (value: number) => {
                 this.advancedSettings.pointRadius = value
                 this.chooseGraph()
             }
@@ -180,7 +180,8 @@ export class HomeComponent implements OnInit {
     getActivites() {
         if (this.isDemoMode) {
             this.athlete = sampleAthlete
-            this.handleActivities(sampleActivities.reverse())
+            const dummyActivites = [...sampleActivities.reverse()]
+            this.handleActivities(dummyActivites)
         } else {
             this.athleteService.getAthleteActivities().subscribe({
                 next: (data: any) => {

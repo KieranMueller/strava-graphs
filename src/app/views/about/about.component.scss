@@ -1,6 +1,6 @@
 .container {
     margin-top: 10px;
-    margin-left: 10px;
+    margin-left: 15px;
 }
 
 .btn {
@@ -13,6 +13,9 @@
     transition: 0.2s;
     margin: 1px;
     margin-bottom: 10px;
+    &:hover {
+        background-color: var(--white-hover);
+    }
     &:focus-visible {
         transition: 0s;
         outline: 3px solid var(--orange);
@@ -27,6 +30,31 @@
 
 .img {
     width: 70vw;
+}
+
+.link {
+    color: var(--orange);
+    transition: 0.2s;
+    &:hover {
+        color: var(--orange-hover);
+    }
+    &:focus-visible {
+        transition: 0s;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .btn {
+        &:hover {
+            background-color: white;
+        }
+    }
+
+    .link {
+        &:hover {
+            color: var(--orange);
+        }
+    }
 }
 
 @media screen and (max-width: 644px) {

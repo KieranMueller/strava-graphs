@@ -37,7 +37,10 @@
     &:focus-visible {
         transition: 0s;
         outline: 3px solid var(--orange);
-        z-index: 1;
+    }
+    &::selection {
+        background-color: var(--orange);
+        color: white;
     }
 }
 

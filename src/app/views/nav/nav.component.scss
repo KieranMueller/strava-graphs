@@ -13,6 +13,28 @@
     div {
         margin: 0 20px;
     }
+    p {
+        &::selection {
+            color: var(--orange);
+        }
+    }
+
+    .light-grey {
+        &::selection {
+            color: white;
+        }
+    }
+}
+
+.title {
+    &::selection {
+        background-color: var(--orange);
+    }
+    span {
+        &::selection {
+            color: white;
+        }
+    }
 }
 
 .light-grey {
@@ -27,6 +49,10 @@ button {
     outline: none;
     padding: 10px;
     border-radius: 14px;
+    &:focus-visible {
+        transition: 0s;
+        border: 3px solid white;
+    }
 }
 
 .btn {
@@ -38,6 +64,9 @@ button {
     &:hover {
         background-color: var(--orange-hover);
     }
+    &::selection {
+        color: var(--light-grey);
+    }
 }
 
 .about-btn {
@@ -45,6 +74,9 @@ button {
     background-color: var(--grey);
     &:hover {
         background-color: var(--grey-hover);
+    }
+    &::selection {
+        color: var(--orange)
     }
 }
 

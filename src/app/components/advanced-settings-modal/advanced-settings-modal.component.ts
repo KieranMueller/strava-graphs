@@ -44,7 +44,7 @@ export class AdvancedSettingsModalComponent implements OnInit {
     }
 
     updateSettings(event: any, setting: AdvancedSettings) {
-        const val = event.target.value
+        const val: number = parseInt(event.target.value)
         switch (setting) {
             case 'pointRadius': {
                 this.settingsService.pointRadius.next(val)

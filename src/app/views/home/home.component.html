@@ -78,7 +78,7 @@
         </div>
     }
     <button class="graph-btn mt-5" (click)="showFilters = !showFilters">{{showFilters ? 'Hide Filters' : 'Show Filters'}}</button>
-    <p class="mb-5 mt-10">Select Graphs</p>
+    <p class="select-graph mb-5 mt-10">Select Graphs</p>
     <div>
         @if (athlete && activities.length > 0) {
             @for (graphType of availableGraphTypes; track graphType) {

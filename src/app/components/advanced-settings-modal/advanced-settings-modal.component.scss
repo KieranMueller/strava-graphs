@@ -43,6 +43,11 @@ input {
     font-size: 1rem;
     margin-bottom: 12px;
     color: black;
+    border: none;
+    outline: none;
+    &:focus-visible {
+        border: 3px solid var(--orange);
+    }
 }
 
 .x {

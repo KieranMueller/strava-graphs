@@ -17,8 +17,7 @@ export class AboutComponent implements OnInit {
 
     ngOnInit(): void {
         const tokenData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY)!)
-        console.log(tokenData)
-        this.athlete = tokenData.athlete
+        if (tokenData) this.athlete = tokenData.athlete
     }
 
     backHome() {
