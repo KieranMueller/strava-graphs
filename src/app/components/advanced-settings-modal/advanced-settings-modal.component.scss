@@ -26,14 +26,33 @@
     display: block;
     font-size: 0.75rem;
     color: var(--light-grey);
+    &::selection {
+        color: white;
+    }
 }
 
 label {
- margin-bottom: 2px; 
+    margin-bottom: 2px; 
+    &::selection {
+        background-color: var(--orange);
+    }
 }
 
 .title {
     font-size: 1.5rem;
+    &::selection {
+        background-color: var(--orange);
+    }
+    .orange {
+        &::selection {
+            background-color: white;
+        }
+    }
+    .orange-fade {
+        &::selection {
+            background-color: var(--orange);
+        }
+    }
 }
 
 input {
@@ -47,6 +66,10 @@ input {
     outline: none;
     &:focus-visible {
         border: 3px solid var(--orange);
+    }
+    &::selection {
+        background-color: var(--orange);
+        color: white;
     }
 }
 

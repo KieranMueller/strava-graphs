@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
     }
     selectedActivities: ActivityType[] = []
     availableGraphTypes: GraphType[] = ['avgSpeed', 'distance', 'movingTime', 'elapsedTime', 'maxSpeed', 'elevationGain']
-    graphTypes: GraphType[] = []
+    graphTypes: GraphType[] = ['avgSpeed']
     chart: any
     availableUnits: AvailableUnitsObj = {
         speed: ['mph', 'km/h', 'm/s'],
@@ -190,7 +190,6 @@ export class HomeComponent implements OnInit {
         } else {
             this.athleteService.getAthleteActivities().subscribe({
                 next: (data: any) => {
-                    console.log(data)
                     this.handleActivities(data)
                 }, error: (e: any) => {
                 }
@@ -206,7 +205,6 @@ export class HomeComponent implements OnInit {
                 this.selectedActivities.includes(activity.type as ActivityType) ||
                 this.selectedActivities.includes(activity.sport_type as ActivityType))
         }
-        console.log(this.activities)
         this.chooseGraph()
     }
 
