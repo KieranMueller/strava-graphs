@@ -11,7 +11,6 @@ export const isAuthenticated: CanActivateFn = (): Observable<boolean> => {
 
     const isDemoMode: boolean = JSON.parse(localStorage.getItem(LOCAL_STORAGE_IS_DEMO_MODE)!)
     if (isDemoMode) {
-        console.log('demo!')
         return of(true)
     }
 
@@ -22,7 +21,6 @@ export const isAuthenticated: CanActivateFn = (): Observable<boolean> => {
         try {
             tokenDataObj = JSON.parse(tokenDataStr)
         } catch (error) {
-            console.error("Error parsing token data", error)
             router.navigateByUrl('/login')
             return of(false)
         }

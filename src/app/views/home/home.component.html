@@ -11,23 +11,23 @@
                     <p class="tip">(All Unless Specified)</p>
                     <p class="sub-title">Cycle Sports</p>
                     @for (cycleSport of activityTypes.cycleSports; track cycleSport) {
-                        <label><input type="checkbox" [checked]="selectedActivities.includes(cycleSport)" [value]="cycleSport" (change)="toggleActivities($event)">{{cycleSport}} <span [ngClass]="{orange: getActivityCountByName(cycleSport) > 0, 'light-grey': getActivityCountByName(cycleSport) === 0}">({{getActivityCountByName(cycleSport)}})</span></label>
+                        <label><input type="checkbox" [id]="cycleSport" [checked]="selectedActivities.includes(cycleSport)" [value]="cycleSport" (change)="toggleActivities($event)">{{cycleSport}} <span [ngClass]="{orange: getActivityCountByName(cycleSport) > 0, 'light-grey': getActivityCountByName(cycleSport) === 0}">({{getActivityCountByName(cycleSport)}})</span></label>
                     }
                     <p class="sub-title">Foot Sports</p>
                     @for (footSport of activityTypes.footSports; track footSport) {
-                        <label><input type="checkbox" [checked]="selectedActivities.includes(footSport)" [value]="footSport" (change)="toggleActivities($event)">{{footSport}} <span [ngClass]="{orange: getActivityCountByName(footSport) > 0, 'light-grey': getActivityCountByName(footSport) === 0}">({{getActivityCountByName(footSport)}})</span></label>
+                        <label><input type="checkbox" [id]="footSport" [checked]="selectedActivities.includes(footSport)" [value]="footSport" (change)="toggleActivities($event)">{{footSport}} <span [ngClass]="{orange: getActivityCountByName(footSport) > 0, 'light-grey': getActivityCountByName(footSport) === 0}">({{getActivityCountByName(footSport)}})</span></label>
                     }
                     <p class="sub-title">Water Sports</p>
                     @for (waterSport of activityTypes.waterSports; track waterSport) {
-                        <label><input type="checkbox" [checked]="selectedActivities.includes(waterSport)" [value]="waterSport" (change)="toggleActivities($event)">{{waterSport}} <span [ngClass]="{orange: getActivityCountByName(waterSport) > 0, 'light-grey': getActivityCountByName(waterSport) === 0}">({{getActivityCountByName(waterSport)}})</span></label>
+                        <label><input type="checkbox" [id]="waterSport" [checked]="selectedActivities.includes(waterSport)" [value]="waterSport" (change)="toggleActivities($event)">{{waterSport}} <span [ngClass]="{orange: getActivityCountByName(waterSport) > 0, 'light-grey': getActivityCountByName(waterSport) === 0}">({{getActivityCountByName(waterSport)}})</span></label>
                     }
                     <p class="sub-title">Winter Sports</p>
                     @for (winterSport of activityTypes.winterSports; track winterSport) {
-                        <label><input type="checkbox" [checked]="selectedActivities.includes(winterSport)" [value]="winterSport" (change)="toggleActivities($event)">{{winterSport}} <span [ngClass]="{orange: getActivityCountByName(winterSport) > 0, 'light-grey': getActivityCountByName(winterSport) === 0}">({{getActivityCountByName(winterSport)}})</span></label>
+                        <label><input type="checkbox" [id]="winterSport" [checked]="selectedActivities.includes(winterSport)" [value]="winterSport" (change)="toggleActivities($event)">{{winterSport}} <span [ngClass]="{orange: getActivityCountByName(winterSport) > 0, 'light-grey': getActivityCountByName(winterSport) === 0}">({{getActivityCountByName(winterSport)}})</span></label>
                     }
                     <p class="sub-title">Other Sports</p>
                     @for (otherSport of activityTypes.otherSports; track otherSport) {
-                        <label><input type="checkbox" [checked]="selectedActivities.includes(otherSport)" [value]="otherSport" (change)="toggleActivities($event)">{{otherSport}} <span [ngClass]="{orange: getActivityCountByName(otherSport) > 0, 'light-grey': getActivityCountByName(otherSport) === 0}">({{getActivityCountByName(otherSport)}})</span></label>
+                        <label><input type="checkbox" [id]="otherSport" [checked]="selectedActivities.includes(otherSport)" [value]="otherSport" (change)="toggleActivities($event)">{{otherSport}} <span [ngClass]="{orange: getActivityCountByName(otherSport) > 0, 'light-grey': getActivityCountByName(otherSport) === 0}">({{getActivityCountByName(otherSport)}})</span></label>
                     }
                 </div>
                 <div class="dropdown">
@@ -52,8 +52,8 @@
                     }
                     <p class="sub-title">Elevation</p>
                     @for (elevationUnit of availableUnits.elevation; track elevationUnit) {
-                        <label [for]="elevationUnit">{{elevationUnit}}
-                            <input type="radio" [id]="elevationUnit" name="elevation" [value]="elevationUnit" [checked]="elevationUnit === selectedUnits.elevation" (change)="handleUnitFilters(elevationUnit, 'elevation')">
+                        <label [for]="elevationUnit + '-elevation'">{{elevationUnit}}
+                            <input type="radio" [id]="elevationUnit + '-elevation'" name="elevation" [value]="elevationUnit" [checked]="elevationUnit === selectedUnits.elevation" (change)="handleUnitFilters(elevationUnit, 'elevation')">
                         </label>
                     }
                 </div>
@@ -65,10 +65,10 @@
                     <div class="clamp-div">
                         <p class="sub-title">{{getGraphTypeLabel(graphType)}}</p>
                         <div class="flex">
-                            <input #minInput [id]="graphType" class="range" type="number" (input)="clampUnits(graphType, 'min', $event, getSelectedUnitFromGraphType(graphType))">
+                            <input #minInput [id]="graphType + '-min'" class="range" type="number" (input)="clampUnits(graphType, 'min', $event, getSelectedUnitFromGraphType(graphType))">
                             <span class="ml-5 tag">{{getShortOrLongUnitFromGraphType(graphType)}}</span>
                             <p class="m-10">to</p>
-                            <input #maxInput [id]="graphType" class="range" type="number" (input)="clampUnits(graphType, 'max', $event, getSelectedUnitFromGraphType(graphType))">
+                            <input #maxInput [id]="graphType + '-max'" class="range" type="number" (input)="clampUnits(graphType, 'max', $event, getSelectedUnitFromGraphType(graphType))">
                             <span class="ml-5 tag">{{getShortOrLongUnitFromGraphType(graphType)}}</span>
                             <button class="ml-10 orange-btn" (click)="clampUnits(graphType, null, $event, getSelectedUnitFromGraphType(graphType), true, minInput, maxInput)">Reset</button>
                         </div>
@@ -94,7 +94,7 @@
         }
         <div>
             <button class="graph-btn bg-orange" (click)="reloadPage()">Reset Deleted Points</button>
-            <button class="graph-btn bg-orange" (click)="clickPointToRemove = !clickPointToRemove">Click Point to Delete: {{clickPointToRemove ? 'ON' : 'OFF'}}</button>
+            <button class="graph-btn bg-orange" (click)="toggleClickPointToRemove()">Click Point to Delete: {{clickPointToRemove ? 'ON' : 'OFF'}}</button>
             <button class="graph-btn bg-orange" (click)="openAdvancedSettings = true">Advanced Settings</button>
         </div>
     </div>

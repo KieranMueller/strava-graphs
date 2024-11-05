@@ -5,7 +5,7 @@ import { CommonModule, DatePipe } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import Chart from 'chart.js/auto'
 import { mapValueAndUnitToDefaultValueAndUnit, METERS_SEC_TO_KMH, METERS_SEC_TO_METERS_SEC, METERS_SEC_TO_MPH, METERS_TO_FEET, METERS_TO_KILOMETERS, METERS_TO_METERS, METERS_TO_MILES, METERS_TO_YARDS, SECONDS_TO_HOURS, SECONDS_TO_MINUTES, SECONDS_TO_SECONDS } from '../../shared/units.util'
-import { LOCAL_STORAGE_ADV_SETTINGS, LOCAL_STORAGE_IS_DEMO_MODE, LOCAL_STORAGE_SETTINGS_KEY, LOCAL_STORAGE_TOKEN_KEY } from '../../shared/env'
+import { LOCAL_STORAGE_ADV_SETTINGS, LOCAL_STORAGE_CLICK_POINT_REMOVE, LOCAL_STORAGE_IS_DEMO_MODE, LOCAL_STORAGE_SETTINGS_KEY, LOCAL_STORAGE_TOKEN_KEY } from '../../shared/env'
 import chartTrendline from "chartjs-plugin-trendline"
 import { BLUE, BLUE_LINE, GREEN, GREEN_LINE, GREY, GREY_LINE, ORANGE, ORANGE_LINE, PINK, PINK_LINE, YELLOW, YELLOW_LINE } from '../../shared/color.util'
 import { mapGraphTypeToActivityObjField } from '../../shared/graph.util'
@@ -137,19 +137,22 @@ export class HomeComponent implements OnInit {
         this.settingsService.pointRadius.subscribe({
             next: (value: number) => {
                 this.advancedSettings.pointRadius = value
-                this.chooseGraph()
+                if (this.chart)
+                    this.chooseGraph()
             }
         })
         this.settingsService.trendlineWidth.subscribe({
             next: value => {
                 this.advancedSettings.trendlineWidth = value
-                this.chooseGraph()
+                if (this.chart)
+                    this.chooseGraph()
             }
         })
         this.settingsService.aspectRatio.subscribe({
             next: value => {
                 this.advancedSettings.aspectRatio = value
-                this.chooseGraph()
+                if (this.chart)
+                    this.chooseGraph()
             }
         })
     }
@@ -175,6 +178,8 @@ export class HomeComponent implements OnInit {
                 else this.graphTypes = settings.graphTypes
             }
         }
+        const clickPointToRemove = JSON.parse(localStorage.getItem(LOCAL_STORAGE_CLICK_POINT_REMOVE)!)
+        if (clickPointToRemove) this.clickPointToRemove = clickPointToRemove
     }
 
     getActivites() {
@@ -188,7 +193,6 @@ export class HomeComponent implements OnInit {
                     console.log(data)
                     this.handleActivities(data)
                 }, error: (e: any) => {
-                    console.log(e)
                 }
             })
         }
@@ -202,6 +206,7 @@ export class HomeComponent implements OnInit {
                 this.selectedActivities.includes(activity.type as ActivityType) ||
                 this.selectedActivities.includes(activity.sport_type as ActivityType))
         }
+        console.log(this.activities)
         this.chooseGraph()
     }
 
@@ -479,41 +484,41 @@ export class HomeComponent implements OnInit {
         // Refactor? Condense?
         switch (unitType) {
             case 'speed': {
-                const minInput = this.minInputs.find(el => el.nativeElement.id === 'avgSpeed')
-                const maxInput = this.maxInputs.find(el => el.nativeElement.id === 'avgSpeed')
-                if (minInput) minInput.nativeElement.value = this.clampedUnits.avgSpeed.min! * this.getUnitFactor(unitType) || null
-                if (maxInput) maxInput.nativeElement.value = this.clampedUnits.avgSpeed.max! * this.getUnitFactor(unitType) || null
+                const minInput = this.minInputs.find(el => el.nativeElement.id === 'avgSpeed-min')
+                const maxInput = this.maxInputs.find(el => el.nativeElement.id === 'avgSpeed-max')
+                if (minInput) minInput.nativeElement.value = (this.clampedUnits.avgSpeed.min! * this.getUnitFactor(unitType)).toFixed(2) || null
+                if (maxInput) maxInput.nativeElement.value = (this.clampedUnits.avgSpeed.max! * this.getUnitFactor(unitType)).toFixed(2) || null
 
-                const minInput2 = this.minInputs.find(el => el.nativeElement.id === 'maxSpeed')
-                const maxInput2 = this.maxInputs.find(el => el.nativeElement.id === 'maxSpeed')
-                if (minInput2) minInput2.nativeElement.value = this.clampedUnits.maxSpeed.min! * this.getUnitFactor(unitType) || null
-                if (maxInput2) maxInput2.nativeElement.value = this.clampedUnits.maxSpeed.max! * this.getUnitFactor(unitType) || null
+                const minInput2 = this.minInputs.find(el => el.nativeElement.id === 'maxSpeed-min')
+                const maxInput2 = this.maxInputs.find(el => el.nativeElement.id === 'maxSpeed-max')
+                if (minInput2) minInput2.nativeElement.value = (this.clampedUnits.maxSpeed.min! * this.getUnitFactor(unitType)).toFixed(2) || null
+                if (maxInput2) maxInput2.nativeElement.value = (this.clampedUnits.maxSpeed.max! * this.getUnitFactor(unitType)).toFixed(2) || null
                 break
             }
             case 'distance': {
-                const minInput = this.minInputs.find(el => el.nativeElement.id === 'distance')
-                const maxInput = this.maxInputs.find(el => el.nativeElement.id === 'distance')
-                if (minInput) minInput.nativeElement.value = this.clampedUnits.distance.min! * this.getUnitFactor(unitType) || null
-                if (maxInput) maxInput.nativeElement.value = this.clampedUnits.distance.max! * this.getUnitFactor(unitType) || null
+                const minInput = this.minInputs.find(el => el.nativeElement.id === 'distance-min')
+                const maxInput = this.maxInputs.find(el => el.nativeElement.id === 'distance-max')
+                if (minInput) minInput.nativeElement.value = (this.clampedUnits.distance.min! * this.getUnitFactor(unitType)).toFixed(2) || null
+                if (maxInput) maxInput.nativeElement.value = (this.clampedUnits.distance.max! * this.getUnitFactor(unitType)).toFixed(2) || null
                 break
             }
             case 'time': {
-                const minInput = this.minInputs.find(el => el.nativeElement.id === 'elapsedTime')
-                const maxInput = this.maxInputs.find(el => el.nativeElement.id === 'elapsedTime')
-                if (minInput) minInput.nativeElement.value = this.clampedUnits.elapsedTime.min! * this.getUnitFactor(unitType) || null
-                if (maxInput) maxInput.nativeElement.value = this.clampedUnits.elapsedTime.max! * this.getUnitFactor(unitType) || null
+                const minInput = this.minInputs.find(el => el.nativeElement.id === 'elapsedTime-min')
+                const maxInput = this.maxInputs.find(el => el.nativeElement.id === 'elapsedTime-max')
+                if (minInput) minInput.nativeElement.value = (this.clampedUnits.elapsedTime.min! * this.getUnitFactor(unitType)).toFixed(2) || null
+                if (maxInput) maxInput.nativeElement.value = (this.clampedUnits.elapsedTime.max! * this.getUnitFactor(unitType)).toFixed(2) || null
 
-                const minInput2 = this.minInputs.find(el => el.nativeElement.id === 'movingTime')
-                const maxInput2 = this.maxInputs.find(el => el.nativeElement.id === 'movingTime')
-                if (minInput2) minInput2.nativeElement.value = this.clampedUnits.movingTime.min! * this.getUnitFactor(unitType) || null
-                if (maxInput2) maxInput2.nativeElement.value = this.clampedUnits.movingTime.max! * this.getUnitFactor(unitType) || null
+                const minInput2 = this.minInputs.find(el => el.nativeElement.id === 'movingTime-min')
+                const maxInput2 = this.maxInputs.find(el => el.nativeElement.id === 'movingTime-max')
+                if (minInput2) minInput2.nativeElement.value = (this.clampedUnits.movingTime.min! * this.getUnitFactor(unitType)).toFixed(2) || null
+                if (maxInput2) maxInput2.nativeElement.value = (this.clampedUnits.movingTime.max! * this.getUnitFactor(unitType)).toFixed(2) || null
                 break
             }
             case 'elevation': {
-                const minInput = this.minInputs.find(el => el.nativeElement.id === 'elevationGain')
-                const maxInput = this.maxInputs.find(el => el.nativeElement.id === 'elevationGain')
-                if (minInput) minInput.nativeElement.value = this.clampedUnits.elevationGain.min! * this.getUnitFactor(unitType) || null
-                if (maxInput) maxInput.nativeElement.value = this.clampedUnits.elevationGain.max! * this.getUnitFactor(unitType) || null
+                const minInput = this.minInputs.find(el => el.nativeElement.id === 'elevationGain-min')
+                const maxInput = this.maxInputs.find(el => el.nativeElement.id === 'elevationGain-max')
+                if (minInput) minInput.nativeElement.value = (this.clampedUnits.elevationGain.min! * this.getUnitFactor(unitType)).toFixed(2) || null
+                if (maxInput) maxInput.nativeElement.value = (this.clampedUnits.elevationGain.max! * this.getUnitFactor(unitType)).toFixed(2) || null
                 break
             }
         }
@@ -537,9 +542,7 @@ export class HomeComponent implements OnInit {
 
     clampActivities() {
         this.activities = this.masterActivites
-
         this.filterActivities()
-
         for (let key in this.clampedUnits) {
             const min = this.clampedUnits[key as GraphType].min
             const max = this.clampedUnits[key as GraphType].max
@@ -597,5 +600,10 @@ export class HomeComponent implements OnInit {
 
     closeAdvancedSettings() {
         this.openAdvancedSettings = false
+    }
+
+    toggleClickPointToRemove() {
+        this.clickPointToRemove = !this.clickPointToRemove
+        localStorage.setItem(LOCAL_STORAGE_CLICK_POINT_REMOVE, JSON.stringify(this.clickPointToRemove))
     }
 }

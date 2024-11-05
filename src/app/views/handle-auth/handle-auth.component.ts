@@ -24,7 +24,6 @@ export class HandleAuthComponent implements OnInit {
                 this.message = 'Success, redirecting...'
                 this.router.navigateByUrl('/home')
             }, error: (e: any) => {
-                console.log(e)
                 this.message = 'Something went wrong...'
             }
         })

@@ -14,6 +14,6 @@ export class AthleteService {
         const headers = new HttpHeaders({
             Authorization: `Bearer ${tokenData.accessToken}`
         })
-        return this.http.get(`${STRAVA_BASE_URL}/api/v3/athlete/activities`, { headers })
+        return this.http.get(`${STRAVA_BASE_URL}/api/v3/athlete/activities?per_page=200`, { headers })
     }
 }
