@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, OnInit, QueryList, ViewChildren } from '@angular/core'
-import { Activity, ActivityType, ActivityTypeObj, AllUnits, Athlete, AvailableUnitsObj, ClampedUnitsObj, CreateGraphArgs, GraphType, SelectedUnitsObj, UnitTypes } from '../../shared/types'
+import { Activity, ActivityType, ActivityTypeObj, AllUnits, Athlete, AvailableUnitsObj, ClampedUnitsObj, CreateGraphArgs, CycleSports, GraphType, SelectedUnitsObj, UnitTypes } from '../../shared/types'
 import { AthleteService } from '../../shared/athlete.service'
 import { CommonModule, DatePipe } from '@angular/common'
 import { FormsModule } from '@angular/forms'
@@ -7,7 +7,7 @@ import Chart from 'chart.js/auto'
 import { mapValueAndUnitToDefaultValueAndUnit, METERS_SEC_TO_KMH, METERS_SEC_TO_METERS_SEC, METERS_SEC_TO_MPH, METERS_TO_FEET, METERS_TO_KILOMETERS, METERS_TO_METERS, METERS_TO_MILES, METERS_TO_YARDS, SECONDS_TO_HOURS, SECONDS_TO_MINUTES, SECONDS_TO_SECONDS } from '../../shared/units.util'
 import { LOCAL_STORAGE_ADV_SETTINGS, LOCAL_STORAGE_CLICK_POINT_REMOVE, LOCAL_STORAGE_IS_DEMO_MODE, LOCAL_STORAGE_SETTINGS_KEY, LOCAL_STORAGE_TOKEN_KEY } from '../../shared/env'
 import chartTrendline from "chartjs-plugin-trendline"
-import { BLUE, BLUE_LINE, GREEN, GREEN_LINE, GREY, GREY_LINE, ORANGE, ORANGE_LINE, PINK, PINK_LINE, YELLOW, YELLOW_LINE } from '../../shared/color.util'
+import { BLUE, BLUE_LINE, GREEN, GREEN_LINE, GREY, GREY_LINE, ORANGE, ORANGE_LINE, PINK, PINK_LINE, PURPLE, PURPLE_LINE, YELLOW, YELLOW_LINE } from '../../shared/color.util'
 import { mapGraphTypeToActivityObjField } from '../../shared/graph.util'
 import { sampleActivities, sampleAthlete } from '../../shared/sample-data'
 import { NavComponent } from '../nav/nav.component'
@@ -48,12 +48,17 @@ export class HomeComponent implements OnInit {
     }
     selectedUnits: SelectedUnitsObj = {
         speed: 'mph',
+        watts: 'watts',
         distance: 'miles',
         time: 'minutes',
         elevation: 'feet'
     }
     clampedUnits: ClampedUnitsObj = {
         avgSpeed: {
+            min: null,
+            max: null
+        },
+        avgWatts: {
             min: null,
             max: null
         },
@@ -190,6 +195,7 @@ export class HomeComponent implements OnInit {
         } else {
             this.athleteService.getAthleteActivities().subscribe({
                 next: (data: any) => {
+                    console.log(data)
                     this.handleActivities(data)
                 }, error: (e: any) => {
                 }
@@ -205,12 +211,31 @@ export class HomeComponent implements OnInit {
                 this.selectedActivities.includes(activity.type as ActivityType) ||
                 this.selectedActivities.includes(activity.sport_type as ActivityType))
         }
+        this.addSportSpecificGraphOptions()
         this.chooseGraph()
+    }
+
+    addSportSpecificGraphOptions() {
+        let count = 0
+        this.selectedActivities.forEach(activity => {
+            if (this.activityTypes.cycleSports.includes(activity as CycleSports)) count++
+        })
+        if (count > 0 || this.selectedActivities.length === 0) {
+            if (!this.availableGraphTypes.includes('avgWatts'))
+                this.availableGraphTypes.splice(1, 0, 'avgWatts')
+        }
+        else {
+            if (this.availableGraphTypes.includes('avgWatts'))
+                this.availableGraphTypes.splice(this.availableGraphTypes.indexOf('avgWatts'), 1)
+            if (this.graphTypes.includes('avgWatts'))
+                this.graphTypes.splice(this.graphTypes.indexOf('avgWatts'), 1)
+        }
     }
 
     getGraphTypeLabel(graphType: GraphType): string {
         switch (graphType) {
             case 'avgSpeed': return 'Average Speed'
+            case 'avgWatts': return 'Average Watts'
             case 'distance': return 'Distance'
             case 'elapsedTime': return 'Elapsed Time'
             case 'movingTime': return 'Moving Time'
@@ -250,6 +275,18 @@ export class HomeComponent implements OnInit {
                         backgroundColor: ORANGE,
                         pointRadius: this.advancedSettings.pointRadius,
                         trendlineLinear: { style: ORANGE, lineStyle: 'line', width: this.advancedSettings.trendlineWidth },
+                    })
+                    break
+                }
+                case 'avgWatts': {
+                    const slope = this.calculateSlope(this.activities.map(activity => activity.start_date), this.activities.map(activity => activity.average_watts!))
+                    args.datasets.push({
+                        label: `Average Watts (W) ${slope.toFixed(2)}`,
+                        data: this.activities.map(activity => activity.average_watts!),
+                        borderColor: PURPLE_LINE,
+                        backgroundColor: PURPLE,
+                        pointRadius: this.advancedSettings.pointRadius,
+                        trendlineLinear: { style: PURPLE, lineStyle: 'line', width: this.advancedSettings.trendlineWidth },
                     })
                     break
                 }
@@ -319,6 +356,14 @@ export class HomeComponent implements OnInit {
     }
 
     calculateSlope(dates: string[], data: number[]): number {
+        const badIndecies = []
+        for (let i = 0; i < data.length; i++) {
+            if (!data[i]) badIndecies.push(i)
+        }
+        badIndecies.forEach(i => {
+            dates.splice(i, 1)
+            data.splice(i, 1)
+        })
         const n = dates.length
         if (n < 2) return 0 // Not enough data points to calculate a slope
 
@@ -422,6 +467,7 @@ export class HomeComponent implements OnInit {
         this.filterActivities()
         this.clampActivities()
         this.persistSettingsInStorage()
+        this.addSportSpecificGraphOptions()
         this.chooseGraph()
     }
 
@@ -545,15 +591,20 @@ export class HomeComponent implements OnInit {
             const min = this.clampedUnits[key as GraphType].min
             const max = this.clampedUnits[key as GraphType].max
             const field = mapGraphTypeToActivityObjField(key as GraphType)
-            this.activities = this.activities.filter(activity =>
-                (activity[field] as number >= (min ? min : (Number.MIN_SAFE_INTEGER)))
-                && (activity[field] as number <= (max ? max : Number.MAX_SAFE_INTEGER)))
+            this.activities = this.activities.filter(activity => {
+                if (activity[field]) {
+                    return (activity[field] as number >= (min ? min : (Number.MIN_SAFE_INTEGER)))
+                        && (activity[field] as number <= (max ? max : Number.MAX_SAFE_INTEGER))
+                }
+                return []
+            })
         }
     }
 
     getSelectedUnitFromGraphType(graphType: GraphType): AllUnits {
         switch (graphType) {
             case 'avgSpeed': case 'maxSpeed': return this.selectedUnits.speed
+            case 'avgWatts': return this.selectedUnits.watts
             case 'distance': return this.selectedUnits.distance
             case 'elapsedTime': case 'movingTime': return this.selectedUnits.time
             case 'elevationGain': return this.selectedUnits.elevation
@@ -571,6 +622,7 @@ export class HomeComponent implements OnInit {
             case 'seconds': return 'sec'
             case 'feet': return 'ft'
             case 'yards': return 'yds'
+            case 'watts': return 'W'
             default: return unit
         }
     }

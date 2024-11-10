@@ -19,6 +19,7 @@ export const HOURS_TO_SECONDS = 3600
 export const MINUTES_TO_SECONDS = 60
 export const FEET_TO_METERS = 0.3048
 export const YARDS_TO_METERS = 0.9144
+export const WATTS_TO_WATTS = 1
 
 export const mapDefaultValueAndUnitToOtherUnit = (value: number, desiredUnit: AllUnits): number => {
     switch (desiredUnit) {
@@ -27,6 +28,7 @@ export const mapDefaultValueAndUnitToOtherUnit = (value: number, desiredUnit: Al
         case 'm/s': return METERS_SEC_TO_METERS_SEC
         case 'miles': return METERS_TO_MILES
         case 'kilometers': return METERS_TO_KILOMETERS
+        case 'watts': return WATTS_TO_WATTS
         case 'meters': return METERS_TO_METERS
         case 'hours': return SECONDS_TO_HOURS
         case 'minutes': return SECONDS_TO_MINUTES
@@ -49,5 +51,6 @@ export const mapValueAndUnitToDefaultValueAndUnit = (value: number, unit: AllUni
         case 'seconds': return value
         case 'feet': return value * FEET_TO_METERS
         case 'yards': return value * YARDS_TO_METERS
+        case 'watts': return value
     }
 }

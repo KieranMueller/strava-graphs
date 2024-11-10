@@ -26,6 +26,7 @@ export const sampleAthlete: Athlete = {
 export const sampleActivities: Activity[] = [
     {
         "resource_state": 2,
+        "average_watts": 117.2,
         "athlete": {
             "id": 1,
             "resource_state": 1
@@ -88,6 +89,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 160.8,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -150,6 +152,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 102.1,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -212,6 +215,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 133.2,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -274,6 +278,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 140.2,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -336,6 +341,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 200.2,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -398,6 +404,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 213.9,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -460,6 +467,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 201.9,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -522,6 +530,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 180.1,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -584,6 +593,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 192.9,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -646,6 +656,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 198.2,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -708,6 +719,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 215.0,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -770,6 +782,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 166.6,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -832,6 +845,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 172.9,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -894,6 +908,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 179.3,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -956,6 +971,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 243.2,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -1018,6 +1034,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 239.0,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -1080,6 +1097,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 263.2,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -1142,6 +1160,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 201.1,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -1204,6 +1223,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 192.2,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -1266,6 +1286,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 133.8,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -1328,6 +1349,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 148.2,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -1390,6 +1412,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 156.6,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -1452,6 +1475,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 159.2,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -1508,6 +1532,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 167.3,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -1570,6 +1595,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 103.2,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -1632,6 +1658,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 111.3,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -1694,6 +1721,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        // "average_watts": 129.9,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -1750,6 +1778,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 140.2,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
@@ -1812,6 +1841,7 @@ export const sampleActivities: Activity[] = [
     },
     {
         "resource_state": 2,
+        "average_watts": 142.2,
         "athlete": {
             "id": 137448695,
             "resource_state": 1
