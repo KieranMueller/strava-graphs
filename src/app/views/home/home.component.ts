@@ -204,7 +204,6 @@ export class HomeComponent implements OnInit {
                 this.athleteService.getAthleteActivities().subscribe({
                     next: (data: any) => {
                         this.isLoading = false
-                        console.log(data)
                         this.handleActivities(data)
                     }, error: (e: any) => {
                         this.handleError(e)
@@ -217,7 +216,6 @@ export class HomeComponent implements OnInit {
     }
 
     handleError(e: any) {
-        console.log(e)
         this.isLoading = false
         if (e.status === 0) {
             this.errorStats.connectionError = true
@@ -289,11 +287,9 @@ export class HomeComponent implements OnInit {
 
     chooseGraph() {
         if (this.chart) this.chart.destroy()
-
         let args: CreateGraphArgs = {
             datasets: [],
         }
-
         for (let graphType of this.graphTypes) {
             switch (graphType) {
                 case 'avgSpeed': {
@@ -385,15 +381,19 @@ export class HomeComponent implements OnInit {
         this.createChart(args)
     }
 
-    calculateSlope(dates: string[], data: number[]): number {
+    calculateSlope(dates: any[], data: number[]): number {
         const badIndecies = []
         for (let i = 0; i < data.length; i++) {
-            if (!data[i]) badIndecies.push(i)
+            if (!data[i]) {
+                badIndecies.push(i)
+            }
         }
         badIndecies.forEach(i => {
-            dates.splice(i, 1)
-            data.splice(i, 1)
+            dates[i] = undefined
         })
+        dates = dates.filter(dates => dates)
+        data = data.filter(data => data)
+
         const n = dates.length
         if (n < 2) return 0 // Not enough data points to calculate a slope
 
