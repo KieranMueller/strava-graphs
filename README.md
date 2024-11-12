@@ -1,3 +1,7 @@
+# A site to visualize your data, for free
+Visit https://performance-graphs.kmcodes.com
+OR, run the project on your local machine following the steps below
+
 # StravaGraphs
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.1.
