@@ -5,7 +5,7 @@ import { CommonModule, DatePipe } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import Chart from 'chart.js/auto'
 import { mapValueAndUnitToDefaultValueAndUnit, METERS_SEC_TO_KMH, METERS_SEC_TO_METERS_SEC, METERS_SEC_TO_MPH, METERS_TO_FEET, METERS_TO_KILOMETERS, METERS_TO_METERS, METERS_TO_MILES, METERS_TO_YARDS, SECONDS_TO_HOURS, SECONDS_TO_MINUTES, SECONDS_TO_SECONDS } from '../../shared/units.util'
-import { LOCAL_STORAGE_ADV_SETTINGS, LOCAL_STORAGE_CLICK_POINT_REMOVE, LOCAL_STORAGE_IS_DEMO_MODE, LOCAL_STORAGE_SETTINGS_KEY, LOCAL_STORAGE_TOKEN_KEY } from '../../shared/env'
+import { LOCAL_STORAGE_ACTIVITIES, LOCAL_STORAGE_ADV_SETTINGS, LOCAL_STORAGE_CLICK_POINT_REMOVE, LOCAL_STORAGE_IS_DEMO_MODE, LOCAL_STORAGE_SETTINGS_KEY, LOCAL_STORAGE_TOKEN_KEY } from '../../shared/env'
 import chartTrendline from "chartjs-plugin-trendline"
 import { BLUE, BLUE_LINE, GREEN, GREEN_LINE, GREY, GREY_LINE, ORANGE, ORANGE_LINE, PINK, PINK_LINE, PURPLE, PURPLE_LINE, YELLOW, YELLOW_LINE } from '../../shared/color.util'
 import { mapGraphTypeToActivityObjField } from '../../shared/graph.util'
@@ -13,12 +13,13 @@ import { sampleActivities, sampleAthlete } from '../../shared/sample-data'
 import { NavComponent } from '../nav/nav.component'
 import { AdvancedSettingsModalComponent } from '../../components/advanced-settings-modal/advanced-settings-modal.component'
 import { SettingsService } from '../../shared/settings.service'
+import { DropdownMessageComponent } from '../../components/dropdown-message/dropdown-message.component'
 Chart.register(chartTrendline)
 
 @Component({
     selector: 'app-home',
     standalone: true,
-    imports: [CommonModule, FormsModule, NavComponent, AdvancedSettingsModalComponent],
+    imports: [CommonModule, FormsModule, NavComponent, AdvancedSettingsModalComponent, DropdownMessageComponent],
     providers: [DatePipe],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
@@ -98,6 +99,11 @@ export class HomeComponent implements OnInit {
     }
     openAdvancedSettings = false
     showFilters = true
+    isLoading = false
+    errorStats = {
+        connectionError: false,
+        somethingWentWrong: false
+    }
 
     constructor(private athleteService: AthleteService, private datePipe: DatePipe, private settingsService: SettingsService) { }
 
@@ -193,17 +199,41 @@ export class HomeComponent implements OnInit {
             const dummyActivites = [...sampleActivities.reverse()]
             this.handleActivities(dummyActivites)
         } else {
-            this.athleteService.getAthleteActivities().subscribe({
-                next: (data: any) => {
-                    console.log(data)
-                    this.handleActivities(data)
-                }, error: (e: any) => {
-                }
-            })
+            const activitiesFromLocal = JSON.parse(localStorage.getItem(LOCAL_STORAGE_ACTIVITIES)!)
+            if (!activitiesFromLocal) {
+                this.athleteService.getAthleteActivities().subscribe({
+                    next: (data: any) => {
+                        this.isLoading = false
+                        console.log(data)
+                        this.handleActivities(data)
+                    }, error: (e: any) => {
+                        this.handleError(e)
+                    }
+                })
+            } else {
+                this.handleActivities(activitiesFromLocal)
+            }
+        }
+    }
+
+    handleError(e: any) {
+        console.log(e)
+        this.isLoading = false
+        if (e.status === 0) {
+            this.errorStats.connectionError = true
+            setTimeout(() => {
+                this.errorStats.connectionError = false
+            }, 3000)
+        } else {
+            this.errorStats.somethingWentWrong = true
+            setTimeout(() => {
+                this.errorStats.somethingWentWrong = false
+            }, 3000)
         }
     }
 
     handleActivities(activities: any) {
+        localStorage.setItem(LOCAL_STORAGE_ACTIVITIES, JSON.stringify(activities))
         this.activities = activities.reverse()
         this.masterActivites = this.activities
         if (this.selectedActivities.length > 0) {
@@ -655,5 +685,11 @@ export class HomeComponent implements OnInit {
     toggleClickPointToRemove() {
         this.clickPointToRemove = !this.clickPointToRemove
         localStorage.setItem(LOCAL_STORAGE_CLICK_POINT_REMOVE, JSON.stringify(this.clickPointToRemove))
+    }
+
+    getFreshActivities() {
+        this.isLoading = true
+        localStorage.removeItem(LOCAL_STORAGE_ACTIVITIES)
+        this.getActivites()
     }
 }

@@ -1,0 +1,26 @@
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--orange);
+  z-index: 1;
+  animation: 0.5s bounce-in;
+  .main-message {
+    padding-left: 10px;
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: translateY(-100px);
+  }
+}
+
+@media screen and (max-width: 300px) {
+  .container {
+    .main-message {
+      font-size: 14px;
+    }
+  }
+}

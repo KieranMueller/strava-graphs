@@ -1,322 +1,397 @@
 .container {
-    padding: 10px;
-    margin-top: 10px;
+  padding: 10px;
+  margin-top: 10px;
 }
 
 .filters-div {
+  display: flex;
+  .two-sections {
     display: flex;
-    .two-sections {
-        display: flex;
-    }
+  }
 }
 
 .dropdown {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    height: 200px;
-    overflow-y: scroll;
-    border: 3px solid var(--light-grey);
-    margin-right: 20px;
-    padding: 5px 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  height: 200px;
+  overflow-y: scroll;
+  border: 3px solid var(--light-grey);
+  margin-right: 20px;
+  padding: 5px 20px;
 
-    &::-webkit-scrollbar {
-        width: 10px;
-    }
-  
-    &::-webkit-scrollbar-track {
-        background-color: var(--grey);
-    }
-  
-    &::-webkit-scrollbar-thumb {
-        background: var(--orange);
-        border-radius: 10px;
-    }
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: var(--grey);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--orange);
+    border-radius: 10px;
+  }
 }
 
 .flex {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .range {
-    width: 60px;
+  width: 60px;
 }
 
 .m-10 {
-    margin: 10px;
+  margin: 10px;
 }
 
 .ml-5 {
-    margin-left: 5px;
+  margin-left: 5px;
 }
 
 .ml-10 {
-    margin-left: 10px;
+  margin-left: 10px;
 }
 
 .title {
-    font-size: 20px;
-    margin: 0;
-    margin-top: 10px;
-    &::selection {
-        color: var(--orange);
-    }
+  font-size: 20px;
+  margin: 0;
+  margin-top: 10px;
+  &::selection {
+    color: var(--orange);
+  }
 }
 
 .sub-title {
-    margin: 13px 0 4px 0;
-    font-size: 18px;
-    &::selection {
-        background-color: var(--orange);
-    }
+  margin: 13px 0 4px 0;
+  font-size: 18px;
+  &::selection {
+    background-color: var(--orange);
+  }
 }
 
 .tip {
-    font-size: 14px;
-    margin: 0;
-    color: var(--light-grey);
-    &::selection {
-        color: white;
-    }
+  font-size: 14px;
+  margin: 0;
+  color: var(--light-grey);
+  &::selection {
+    color: white;
+  }
 }
 
 .light-grey {
-    color: var(--light-grey);
+  color: var(--light-grey);
 }
 
 .clamp-div {
-    width: fit-content;
+  width: fit-content;
 }
 
 input {
-    accent-color: var(--orange);
-    outline: none;
-    border: none;
-    padding: 6px;
-    font-size: 18px;
-    border-radius: 10px;
-    text-align: center;
-    &:focus-visible {
-        outline: 3px solid var(--orange);
-    }
-    &::selection {
-        color: var(--orange);
-    }
+  accent-color: var(--orange);
+  outline: none;
+  border: none;
+  padding: 6px;
+  font-size: 18px;
+  border-radius: 10px;
+  text-align: center;
+  &:focus-visible {
+    outline: 3px solid var(--orange);
+  }
+  &::selection {
+    color: var(--orange);
+  }
 }
 
 .subtext {
-    color: var(--light-grey);
-    font-size: 14px;
-    width: 300px;
-    margin: 0;
-    margin-top: 5px;
-    &::selection {
-        color: white;
-    }
+  color: var(--light-grey);
+  font-size: 14px;
+  width: 300px;
+  margin: 0;
+  margin-top: 5px;
+  &::selection {
+    color: white;
+  }
 }
 
 .orange-btn {
-    color: white;
-    background-color: var(--orange);
-    border: none;
-    outline: none;
-    padding: 6px 14px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.2s;
-    &:hover {
-        background-color: var(--orange-hover);
-    }
-    &:focus-visible {
-        transition: 0s;
-        outline: 3px solid white;
-    }
+  color: white;
+  background-color: var(--orange);
+  border: none;
+  outline: none;
+  padding: 6px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+  &:hover {
+    background-color: var(--orange-hover);
+  }
+  &:focus-visible {
+    transition: 0s;
+    outline: 3px solid white;
+  }
 }
 
 .tag {
-    font-size: 14px;
-    color: var(--light-grey);
+  font-size: 14px;
+  color: var(--light-grey);
 }
 
 .reset-points {
-    width: fit-content;
-    height: fit-content;
+  width: fit-content;
+  height: fit-content;
 }
 
 .selected {
-    background-color: var(--light-grey);
+  background-color: var(--light-grey);
 }
 
 .bg-orange {
-    background-color: var(--orange);
-    color: white;
-    &:focus-visible {
-        outline: 3px solid white;
-    }
+  background-color: var(--orange);
+  color: white;
+  &:focus-visible {
+    outline: 3px solid white;
+  }
 }
 
 .block {
-    display: block;
+  display: block;
 }
 
 span {
-   &::selection {
+  &::selection {
     background-color: white;
-   } 
+  }
 }
 
 label {
-    &::selection {
-        background-color: var(--orange);
-    }
+  &::selection {
+    background-color: var(--orange);
+  }
 }
 
 .graph-dropdown {
-    p {
-        &::selection {
-            background-color: var(--orange);
-        }
+  p {
+    &::selection {
+      background-color: var(--orange);
     }
-    .title {
-        &::selection {
-            color: white;
-        }
+  }
+  .title {
+    &::selection {
+      color: white;
     }
-    button {
-        &::selection {
-            color: var(--light-grey);
-        }
+  }
+  button {
+    &::selection {
+      color: var(--light-grey);
     }
+  }
 }
 
 .select-graph {
-    &::selection {
-        color: var(--orange);
+  &::selection {
+    color: var(--orange);
+  }
+}
+
+.tooltip-div {
+  display: flex;
+  .q-mark-div {
+    position: relative;
+    display: inline;
+    .q-mark {
+      height: 35px;
     }
+    .tooltip {
+      display: none;
+      position: absolute;
+      opacity: 0.9;
+      background-color: var(--dark);
+      border: 2px solid var(--grey);
+      padding: 10px;
+      border-radius: 5px;
+      left: 25px;
+      top: 20px;
+      width: 200px;
+      &::selection {
+        background-color: var(--orange);
+      }
+    }
+    &:hover {
+      .tooltip {
+        display: block;
+      }
+    }
+  }
+}
+
+.refresh-btn {
+  position: relative;
 }
 
 @media screen and (max-width: 980px) {
-    
-    .dropdown {
-        font-size: 14px;
-    }
+  .dropdown {
+    font-size: 14px;
+  }
 
-    .title {
-        font-size: 18px;
-    }
+  .title {
+    font-size: 18px;
+  }
 
-    .tip {
-        font-size: 12px;
-    }
+  .tip {
+    font-size: 12px;
+  }
 
-    .subtext {
-        font-size: 12px;
-    }
+  .subtext {
+    font-size: 12px;
+  }
 
-    .sub-title {
-        font-size: 16px;
-    }
+  .sub-title {
+    font-size: 16px;
+  }
 
-    input {
-        padding: 4px;
-        font-size: 16px;
-    }
+  input {
+    padding: 4px;
+    font-size: 16px;
+  }
 
-    .orange-btn {
-        padding: 3px 7px;
-        font-size: 13px;
-    }
+  .orange-btn {
+    padding: 3px 7px;
+    font-size: 13px;
+  }
 }
 
 @media screen and (max-width: 900px) {
-    
-    .dropdown {
-        font-size: 12px;
-        margin-right: 10px;
-        padding: 2px 10px;
-    }
+  .dropdown {
+    font-size: 12px;
+    margin-right: 10px;
+    padding: 2px 10px;
+  }
 
-    .title {
-        font-size: 16px;
-    }
+  .title {
+    font-size: 16px;
+  }
 
-    .tip {
-        font-size: 10px;
-    }
+  .tip {
+    font-size: 10px;
+  }
 
-    .subtext {
-        font-size: 10px;
-    }
+  .subtext {
+    font-size: 10px;
+  }
 
-    .sub-title {
-        font-size: 14px;
-    }
+  .sub-title {
+    font-size: 14px;
+  }
 
-    input {
-        padding: 4px;
-        font-size: 14px;
-    }
+  input {
+    padding: 4px;
+    font-size: 14px;
+  }
 
-    .orange-btn {
-        padding: 3px 7px;
-        font-size: 11px;
-    }
+  .orange-btn {
+    padding: 3px 7px;
+    font-size: 11px;
+  }
 }
 
 @media screen and (max-width: 720px) {
-    input {
-        padding: 3px;
-        font-size: 0.8rem;
-    }
+  input {
+    padding: 3px;
+    font-size: 0.8rem;
+  }
 }
 
 @media screen and (max-width: 700px) {
-    .orange-btn {
-        &:hover {
-            background-color: var(--orange);
-        }
+  .orange-btn {
+    &:hover {
+      background-color: var(--orange);
     }
+  }
 
-    .dropdown {
-        .subtext {
-            width: 200px;
-        }
-        input {
-            width: 40px;
-        }
-        span {
-            font-size: 12px;
-        }
+  .dropdown {
+    .subtext {
+      width: 200px;
     }
+    input {
+      width: 40px;
+    }
+    span {
+      font-size: 12px;
+    }
+  }
 }
 
 @media screen and (max-width: 600px) {
-    .filters-div {
-        flex-direction: column;
-    }
+  .filters-div {
+    flex-direction: column;
+  }
 
-    .dropdown {
-        margin-bottom: 10px;
-        width: fit-content;
-        input {
-            margin: 0;
-        }
+  .dropdown {
+    margin-bottom: 10px;
+    width: fit-content;
+    input {
+      margin: 0;
     }
+  }
 
-    .graph-dropdown {
-        margin-bottom: 0;
-    }
+  .graph-dropdown {
+    margin-bottom: 0;
+  }
 
-    .sub-title {
-        margin: 8px 0 2px 0;
+  .sub-title {
+    margin: 8px 0 2px 0;
+  }
+}
+
+@media screen and (max-width: 435px) {
+  .tooltip-div {
+    .q-mark-div {
+      .q-mark {
+        height: 30px;
+      }
+      .tooltip {
+        left: 25px;
+        top: 20px;
+        width: 100px;
+        font-size: 14px;
+      }
     }
+  }
 }
 
 @media screen and (max-width: 400px) {
-    .graph-dropdown {
-        margin-right: 0;
-        width: 85%;
+  .graph-dropdown {
+    margin-right: 0;
+    width: 85%;
+  }
+}
+
+@media screen and (max-width: 310px) {
+  .tooltip-div {
+    .q-mark-div {
+      .tooltip {
+        left: 25px;
+        top: 20px;
+        width: 100px;
+        font-size: 12px;
+      }
     }
+  }
+}
+
+@media screen and (max-width: 295px) {
+  .tooltip-div {
+    .q-mark-div {
+      .tooltip {
+        left: -50px;
+        top: 30px;
+        width: 100px;
+        font-size: 12px;
+      }
+    }
+  }
 }
