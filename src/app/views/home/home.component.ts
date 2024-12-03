@@ -203,7 +203,6 @@ export class HomeComponent implements OnInit {
             if (!activitiesFromLocal) {
                 this.athleteService.getAthleteActivities().subscribe({
                     next: (data: any) => {
-                        console.log(data)
                         this.isLoading = false
                         this.handleActivities(data)
                     }, error: (e: any) => {
