@@ -40,7 +40,7 @@ export type ElevationUnits = 'feet' | 'yards' | 'meters'
 
 export type GraphType = 'avgSpeed' | 'avgWatts' | 'distance' | 'movingTime' | 'elapsedTime' | 'maxSpeed' | 'elevationGain'
 
-export type CycleSports = 'Ride' | 'Mountain Bike Ride' | 'Gravel Ride' | 'E-Bike Ride' | 'E-Mountain Bike Ride' | 'Velomobile' | 'Virtual Ride'
+export type CycleSports = 'Ride' | 'Mountain Bike Ride' | 'Gravel Ride' | 'E-Bike Ride' | 'E-Mountain Bike Ride' | 'Velomobile' | 'VirtualRide'
 
 export type FootSports = 'Run' | 'Trail Run' | 'Walk' | 'Hike' | 'Virtual Run'
 

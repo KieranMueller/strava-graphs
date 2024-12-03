@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit {
     masterActivites: Activity[] = []
     activities: Activity[] = []
     activityTypes: ActivityTypeObj = {
-        cycleSports: ['Ride', 'Mountain Bike Ride', 'Gravel Ride', 'E-Bike Ride', 'E-Mountain Bike Ride', 'Velomobile'],
+        cycleSports: ['Ride', 'Mountain Bike Ride', 'Gravel Ride', 'E-Bike Ride', 'E-Mountain Bike Ride', 'Velomobile', 'VirtualRide'],
         footSports: ['Run', 'Trail Run', 'Walk', 'Hike', 'Virtual Run'],
         waterSports: ['Canoe', 'Kayak', 'Kitesurf', 'Rowing', 'Stand Up Paddling', 'Surf', 'Swim', 'Windsurf'],
         winterSports: ['Ice Skate', 'Alpine Ski', 'Backcountry Ski', 'Nordic Ski', 'Snowboard', 'Snowshoe'],
@@ -203,6 +203,7 @@ export class HomeComponent implements OnInit {
             if (!activitiesFromLocal) {
                 this.athleteService.getAthleteActivities().subscribe({
                     next: (data: any) => {
+                        console.log(data)
                         this.isLoading = false
                         this.handleActivities(data)
                     }, error: (e: any) => {
