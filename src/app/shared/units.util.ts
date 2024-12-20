@@ -35,6 +35,7 @@ export const mapDefaultValueAndUnitToOtherUnit = (value: number, desiredUnit: Al
         case 'seconds': return SECONDS_TO_SECONDS
         case 'feet': return METERS_TO_FEET
         case 'yards': return METERS_TO_YARDS
+        case 'bpm': case 'units': return 1
     }
 }
 
@@ -52,5 +53,6 @@ export const mapValueAndUnitToDefaultValueAndUnit = (value: number, unit: AllUni
         case 'feet': return value * FEET_TO_METERS
         case 'yards': return value * YARDS_TO_METERS
         case 'watts': return value
+        case 'bpm': case 'units': return value
     }
 }

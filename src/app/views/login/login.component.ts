@@ -1,6 +1,5 @@
 import { Component } from '@angular/core'
 import { environment } from '../../../environments/environment'
-import { AuthService } from '../../shared/auth.service'
 import { Router } from '@angular/router'
 import { LOCAL_STORAGE_IS_DEMO_MODE } from '../../shared/env'
 
@@ -17,7 +16,8 @@ export class LoginComponent {
 
     loginRedirect() {
         localStorage.setItem(LOCAL_STORAGE_IS_DEMO_MODE, JSON.stringify(false))
-        document.location.href = `https://www.strava.com/oauth/authorize?client_id=${environment.CLIENT_ID}&response_type=code&redirect_uri=${environment.FRONTEND_BASE_URL}/exchange_token&approval_prompt=force&scope=read,read_all,profile:read_all,activity:read,activity:read_all`
+        const path = `https://www.strava.com/oauth/authorize?client_id=${environment.CLIENT_ID}&response_type=code&redirect_uri=${environment.FRONTEND_BASE_URL}/exchange_token&approval_prompt=force&scope=read,read_all,profile:read_all,activity:read,activity:read_all`
+        document.location.href = path
     }
 
     demo() {

@@ -7,7 +7,7 @@ import Chart from 'chart.js/auto'
 import { mapValueAndUnitToDefaultValueAndUnit, METERS_SEC_TO_KMH, METERS_SEC_TO_METERS_SEC, METERS_SEC_TO_MPH, METERS_TO_FEET, METERS_TO_KILOMETERS, METERS_TO_METERS, METERS_TO_MILES, METERS_TO_YARDS, SECONDS_TO_HOURS, SECONDS_TO_MINUTES, SECONDS_TO_SECONDS } from '../../shared/units.util'
 import { LOCAL_STORAGE_ACTIVITIES, LOCAL_STORAGE_ADV_SETTINGS, LOCAL_STORAGE_CLICK_POINT_REMOVE, LOCAL_STORAGE_IS_DEMO_MODE, LOCAL_STORAGE_SETTINGS_KEY, LOCAL_STORAGE_TOKEN_KEY } from '../../shared/env'
 import chartTrendline from "chartjs-plugin-trendline"
-import { BLUE, BLUE_LINE, GREEN, GREEN_LINE, GREY, GREY_LINE, ORANGE, ORANGE_LINE, PINK, PINK_LINE, PURPLE, PURPLE_LINE, YELLOW, YELLOW_LINE } from '../../shared/color.util'
+import { BLUE, BLUE_LINE, CYAN, CYAN_LINE, GREEN, GREEN_LINE, GREY, GREY_LINE, ORANGE, ORANGE_LINE, PINK, PINK_LINE, PURPLE, PURPLE_LINE, RED, RED_LINE, YELLOW, YELLOW_LINE } from '../../shared/color.util'
 import { mapGraphTypeToActivityObjField } from '../../shared/graph.util'
 import { sampleActivities, sampleAthlete } from '../../shared/sample-data'
 import { NavComponent } from '../nav/nav.component'
@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
             'Workout', 'HIIT', 'Pilates', 'Table Tennis', 'Squash', 'Racquetball']
     }
     selectedActivities: ActivityType[] = []
-    availableGraphTypes: GraphType[] = ['avgSpeed', 'distance', 'movingTime', 'elapsedTime', 'maxSpeed', 'elevationGain']
+    availableGraphTypes: GraphType[] = ['avgSpeed', 'avgHeart', 'distance', 'movingTime', 'elapsedTime', 'maxSpeed', 'elevationGain']
     graphTypes: GraphType[] = ['avgSpeed']
     chart: any
     availableUnits: AvailableUnitsObj = {
@@ -49,13 +49,23 @@ export class HomeComponent implements OnInit {
     }
     selectedUnits: SelectedUnitsObj = {
         speed: 'mph',
+        heart: 'bpm',
         watts: 'watts',
         distance: 'miles',
         time: 'minutes',
-        elevation: 'feet'
+        elevation: 'feet',
+        constant: 'units'
     }
     clampedUnits: ClampedUnitsObj = {
         avgSpeed: {
+            min: null,
+            max: null
+        },
+        avgHeart: {
+            min: null,
+            max: null
+        },
+        avgWattsOverAvgHeart: {
             min: null,
             max: null
         },
@@ -251,24 +261,32 @@ export class HomeComponent implements OnInit {
         if (count > 0 || this.selectedActivities.length === 0) {
             if (!this.availableGraphTypes.includes('avgWatts'))
                 this.availableGraphTypes.splice(1, 0, 'avgWatts')
+            if (!this.availableGraphTypes.includes('avgWattsOverAvgHeart'))
+                this.availableGraphTypes.splice(3, 0, 'avgWattsOverAvgHeart')
         }
         else {
             if (this.availableGraphTypes.includes('avgWatts'))
                 this.availableGraphTypes.splice(this.availableGraphTypes.indexOf('avgWatts'), 1)
             if (this.graphTypes.includes('avgWatts'))
                 this.graphTypes.splice(this.graphTypes.indexOf('avgWatts'), 1)
+            if (this.availableGraphTypes.includes('avgWattsOverAvgHeart'))
+                this.availableGraphTypes.splice(this.availableGraphTypes.indexOf('avgWattsOverAvgHeart'), 1)
+            if (this.graphTypes.includes('avgWattsOverAvgHeart'))
+                this.graphTypes.splice(this.graphTypes.indexOf('avgWattsOverAvgHeart'), 1)
         }
     }
 
     getGraphTypeLabel(graphType: GraphType): string {
         switch (graphType) {
             case 'avgSpeed': return 'Average Speed'
+            case 'avgHeart': return 'Average Heart Rate'
             case 'avgWatts': return 'Average Watts'
             case 'distance': return 'Distance'
             case 'elapsedTime': return 'Elapsed Time'
             case 'movingTime': return 'Moving Time'
             case 'maxSpeed': return 'Max Speed'
             case 'elevationGain': return 'Elevation Gain'
+            case 'avgWattsOverAvgHeart': return 'AvgWatts/AvgHeartRate'
         }
     }
 
@@ -304,6 +322,18 @@ export class HomeComponent implements OnInit {
                     })
                     break
                 }
+                case 'avgHeart': {
+                    const slope = this.calculateSlope(this.activities.map(activity => activity.start_date), this.activities.map(activity => activity.average_heartrate!))
+                    args.datasets.push({
+                        label: `Average Heart Rate (${this.selectedUnits.heart}) ${slope.toFixed(2)}`,
+                        data: this.activities.map(activity => activity.average_heartrate!),
+                        borderColor: RED_LINE,
+                        backgroundColor: RED,
+                        pointRadius: this.advancedSettings.pointRadius,
+                        trendlineLinear: { style: RED, lineStyle: 'line', width: this.advancedSettings.trendlineWidth },
+                    })
+                    break
+                }
                 case 'avgWatts': {
                     const slope = this.calculateSlope(this.activities.map(activity => activity.start_date), this.activities.map(activity => activity.average_watts!))
                     args.datasets.push({
@@ -313,6 +343,18 @@ export class HomeComponent implements OnInit {
                         backgroundColor: PURPLE,
                         pointRadius: this.advancedSettings.pointRadius,
                         trendlineLinear: { style: PURPLE, lineStyle: 'line', width: this.advancedSettings.trendlineWidth },
+                    })
+                    break
+                }
+                case 'avgWattsOverAvgHeart': {
+                    const slope = this.calculateSlope(this.activities.map(activity => activity.start_date), this.activities.map(activity => activity.average_watts! / activity.average_heartrate!))
+                    args.datasets.push({
+                        label: `AvgWatts/AvgHeart (%) ${slope.toFixed(2)}`,
+                        data: this.activities.map(activity => (activity.average_watts! / activity.average_heartrate!) * 100),
+                        borderColor: CYAN_LINE,
+                        backgroundColor: CYAN,
+                        pointRadius: this.advancedSettings.pointRadius,
+                        trendlineLinear: { style: CYAN, lineStyle: 'line', width: this.advancedSettings.trendlineWidth },
                     })
                     break
                 }
@@ -621,6 +663,7 @@ export class HomeComponent implements OnInit {
             const min = this.clampedUnits[key as GraphType].min
             const max = this.clampedUnits[key as GraphType].max
             const field = mapGraphTypeToActivityObjField(key as GraphType)
+            if (!field) return
             this.activities = this.activities.filter(activity => {
                 if (activity[field]) {
                     return (activity[field] as number >= (min ? min : (Number.MIN_SAFE_INTEGER)))
@@ -634,10 +677,12 @@ export class HomeComponent implements OnInit {
     getSelectedUnitFromGraphType(graphType: GraphType): AllUnits {
         switch (graphType) {
             case 'avgSpeed': case 'maxSpeed': return this.selectedUnits.speed
+            case 'avgHeart': return this.selectedUnits.heart
             case 'avgWatts': return this.selectedUnits.watts
             case 'distance': return this.selectedUnits.distance
             case 'elapsedTime': case 'movingTime': return this.selectedUnits.time
             case 'elevationGain': return this.selectedUnits.elevation
+            case 'avgWattsOverAvgHeart': return this.selectedUnits.constant
         }
     }
 

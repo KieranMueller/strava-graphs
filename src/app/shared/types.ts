@@ -26,9 +26,9 @@ export type AdvancedSettings = 'pointRadius' | 'trendlineWidth' | 'aspectRatio'
 
 export type SelectedUnitsObj = { [key in UnitTypes]: AllUnits }
 
-export type UnitTypes = 'speed' | 'watts' | 'distance' | 'time' | 'elevation'
+export type UnitTypes = 'speed' | 'heart' | 'watts' | 'distance' | 'time' | 'elevation' | 'constant'
 
-export type AllUnits = SpeedUnits | 'watts' | DistanceUnits | TimeUnits | ElevationUnits
+export type AllUnits = SpeedUnits | 'bpm' | 'watts' | DistanceUnits | TimeUnits | ElevationUnits | 'units'
 
 export type SpeedUnits = 'mph' | 'km/h' | 'm/s'
 
@@ -38,7 +38,7 @@ export type TimeUnits = 'hours' | 'minutes' | 'seconds'
 
 export type ElevationUnits = 'feet' | 'yards' | 'meters'
 
-export type GraphType = 'avgSpeed' | 'avgWatts' | 'distance' | 'movingTime' | 'elapsedTime' | 'maxSpeed' | 'elevationGain'
+export type GraphType = 'avgSpeed' | 'avgHeart' | 'avgWattsOverAvgHeart' | 'avgWatts' | 'distance' | 'movingTime' | 'elapsedTime' | 'maxSpeed' | 'elevationGain'
 
 export type CycleSports = 'Ride' | 'Mountain Bike Ride' | 'Gravel Ride' | 'E-Bike Ride' | 'E-Mountain Bike Ride' | 'Velomobile' | 'VirtualRide'
 
@@ -66,6 +66,7 @@ export type ActivityTypeObj = {
 
 export type Activity = {
     resource_state: number
+    average_heartrate?: number
     average_watts?: number
     athlete: Athlete
     name: string
