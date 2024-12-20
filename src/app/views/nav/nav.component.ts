@@ -2,6 +2,7 @@ import { Component, input } from '@angular/core'
 import { Athlete } from '../../shared/types'
 import { LOCAL_STORAGE_IS_DEMO_MODE, LOCAL_STORAGE_TOKEN_KEY } from '../../shared/env'
 import { Router } from '@angular/router'
+import { AuthService } from '../../shared/auth.service'
 
 @Component({
     selector: 'app-nav',
@@ -13,11 +14,10 @@ import { Router } from '@angular/router'
 export class NavComponent {
     athlete = input.required<Athlete>()
 
-    constructor(private router: Router) { }
+    constructor(private router: Router, private authService: AuthService) { }
 
     logout() {
-        localStorage.removeItem(LOCAL_STORAGE_IS_DEMO_MODE)
-        localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY)
+        this.authService.wipeLocalStorage()
         this.router.navigateByUrl('/login')
     }
 

@@ -2,6 +2,7 @@ import { Component } from '@angular/core'
 import { environment } from '../../../environments/environment'
 import { Router } from '@angular/router'
 import { LOCAL_STORAGE_IS_DEMO_MODE } from '../../shared/env'
+import { AuthService } from '../../shared/auth.service'
 
 @Component({
     selector: 'app-login',
@@ -12,7 +13,7 @@ import { LOCAL_STORAGE_IS_DEMO_MODE } from '../../shared/env'
 })
 export class LoginComponent {
 
-    constructor(private router: Router) { }
+    constructor(private router: Router, private authService: AuthService) { }
 
     loginRedirect() {
         localStorage.setItem(LOCAL_STORAGE_IS_DEMO_MODE, JSON.stringify(false))
@@ -23,5 +24,9 @@ export class LoginComponent {
     demo() {
         localStorage.setItem(LOCAL_STORAGE_IS_DEMO_MODE, JSON.stringify(true))
         this.router.navigateByUrl('/home')
+    }
+
+    clearLocalStorage() {
+        this.authService.wipeLocalStorage()
     }
 }

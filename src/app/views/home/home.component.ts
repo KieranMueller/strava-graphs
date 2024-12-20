@@ -7,7 +7,7 @@ import Chart from 'chart.js/auto'
 import { mapValueAndUnitToDefaultValueAndUnit, METERS_SEC_TO_KMH, METERS_SEC_TO_METERS_SEC, METERS_SEC_TO_MPH, METERS_TO_FEET, METERS_TO_KILOMETERS, METERS_TO_METERS, METERS_TO_MILES, METERS_TO_YARDS, SECONDS_TO_HOURS, SECONDS_TO_MINUTES, SECONDS_TO_SECONDS } from '../../shared/units.util'
 import { LOCAL_STORAGE_ACTIVITIES, LOCAL_STORAGE_ADV_SETTINGS, LOCAL_STORAGE_CLICK_POINT_REMOVE, LOCAL_STORAGE_IS_DEMO_MODE, LOCAL_STORAGE_SETTINGS_KEY, LOCAL_STORAGE_TOKEN_KEY } from '../../shared/env'
 import chartTrendline from "chartjs-plugin-trendline"
-import { BLUE, BLUE_LINE, CYAN, CYAN_LINE, GREEN, GREEN_LINE, GREY, GREY_LINE, ORANGE, ORANGE_LINE, PINK, PINK_LINE, PURPLE, PURPLE_LINE, RED, RED_LINE, YELLOW, YELLOW_LINE } from '../../shared/color.util'
+import { BLUE, BLUE_LINE, BROWN, BROWN_LINE, CYAN, CYAN_LINE, GREEN, GREEN_LINE, GREY, GREY_LINE, ORANGE, ORANGE_LINE, PINK, PINK_LINE, PURPLE, PURPLE_LINE, RED, RED_LINE, YELLOW, YELLOW_LINE } from '../../shared/color.util'
 import { mapGraphTypeToActivityObjField } from '../../shared/graph.util'
 import { sampleActivities, sampleAthlete } from '../../shared/sample-data'
 import { NavComponent } from '../nav/nav.component'
@@ -54,10 +54,15 @@ export class HomeComponent implements OnInit {
         distance: 'miles',
         time: 'minutes',
         elevation: 'feet',
-        constant: 'units'
+        constant: 'units',
+        cadence: 'rpm'
     }
     clampedUnits: ClampedUnitsObj = {
         avgSpeed: {
+            min: null,
+            max: null
+        },
+        avgCadence: {
             min: null,
             max: null
         },
@@ -254,25 +259,24 @@ export class HomeComponent implements OnInit {
     }
 
     addSportSpecificGraphOptions() {
-        let count = 0
-        this.selectedActivities.forEach(activity => {
-            if (this.activityTypes.cycleSports.includes(activity as CycleSports)) count++
-        })
-        if (count > 0 || this.selectedActivities.length === 0) {
-            if (!this.availableGraphTypes.includes('avgWatts'))
-                this.availableGraphTypes.splice(1, 0, 'avgWatts')
-            if (!this.availableGraphTypes.includes('avgWattsOverAvgHeart'))
-                this.availableGraphTypes.splice(3, 0, 'avgWattsOverAvgHeart')
-        }
-        else {
-            if (this.availableGraphTypes.includes('avgWatts'))
-                this.availableGraphTypes.splice(this.availableGraphTypes.indexOf('avgWatts'), 1)
-            if (this.graphTypes.includes('avgWatts'))
-                this.graphTypes.splice(this.graphTypes.indexOf('avgWatts'), 1)
-            if (this.availableGraphTypes.includes('avgWattsOverAvgHeart'))
-                this.availableGraphTypes.splice(this.availableGraphTypes.indexOf('avgWattsOverAvgHeart'), 1)
-            if (this.graphTypes.includes('avgWattsOverAvgHeart'))
-                this.graphTypes.splice(this.graphTypes.indexOf('avgWattsOverAvgHeart'), 1)
+        const count = this.selectedActivities.filter(activity => this.activityTypes.cycleSports.includes(activity as CycleSports)).length
+        if (count > 0 || this.selectedActivities.length === 0)
+            this.addSportSpecificGraphTypes(new Map<GraphType, number>([['avgWatts', 1], ['avgWattsOverAvgHeart', 3], ['avgCadence', 4]]))
+        else this.removeSportSpecificGraphTypes(['avgWatts', 'avgWattsOverAvgHeart', 'avgCadence'])
+    }
+
+    addSportSpecificGraphTypes(graphTypesAndIndecies: Map<GraphType, number>) {
+        for (let [graphType, index] of graphTypesAndIndecies)
+            if (!this.availableGraphTypes.includes(graphType))
+                this.availableGraphTypes.splice(index, 0, graphType)
+    }
+
+    removeSportSpecificGraphTypes(graphTypes: GraphType[]) {
+        for (let graphType of graphTypes) {
+            if (this.availableGraphTypes.includes(graphType))
+                this.availableGraphTypes.splice(this.availableGraphTypes.indexOf(graphType), 1)
+            if (this.graphTypes.includes(graphType))
+                this.graphTypes.splice(this.graphTypes.indexOf(graphType), 1)
         }
     }
 
@@ -287,6 +291,7 @@ export class HomeComponent implements OnInit {
             case 'maxSpeed': return 'Max Speed'
             case 'elevationGain': return 'Elevation Gain'
             case 'avgWattsOverAvgHeart': return 'AvgWatts/AvgHeartRate'
+            case 'avgCadence': return 'Average Cadence'
         }
     }
 
@@ -355,6 +360,21 @@ export class HomeComponent implements OnInit {
                         backgroundColor: CYAN,
                         pointRadius: this.advancedSettings.pointRadius,
                         trendlineLinear: { style: CYAN, lineStyle: 'line', width: this.advancedSettings.trendlineWidth },
+                    })
+                    break
+                }
+                case 'avgCadence': {
+                    const slope = this.calculateSlope(this.activities.map(activity => activity.start_date), this.activities.map(activity => activity.average_cadence!))
+                    args.datasets.push({
+                        label: `Average Cadence (${this.selectedUnits.cadence}) ${slope.toFixed(2)}`,
+                        data: this.activities.map(activity => {
+                            console.log(this.selectedUnits.cadence)
+                            return activity.average_cadence!
+                        }),
+                        borderColor: BROWN_LINE,
+                        backgroundColor: BROWN,
+                        pointRadius: this.advancedSettings.pointRadius,
+                        trendlineLinear: { style: BROWN, lineStyle: 'line', width: this.advancedSettings.trendlineWidth },
                     })
                     break
                 }
@@ -683,6 +703,7 @@ export class HomeComponent implements OnInit {
             case 'elapsedTime': case 'movingTime': return this.selectedUnits.time
             case 'elevationGain': return this.selectedUnits.elevation
             case 'avgWattsOverAvgHeart': return this.selectedUnits.constant
+            case 'avgCadence': return 'rpm'
         }
     }
 
@@ -708,7 +729,8 @@ export class HomeComponent implements OnInit {
             activities: this.selectedActivities,
             graphTypes: this.graphTypes,
         }
-        localStorage.setItem('performanceGraphs-settings', JSON.stringify(settings))
+        console.log('Saving Settings: ', settings)
+        localStorage.setItem(LOCAL_STORAGE_SETTINGS_KEY, JSON.stringify(settings))
     }
 
     getActivityCountByName(activityName: ActivityType): number {

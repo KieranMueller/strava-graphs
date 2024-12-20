@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs'
-import { STRAVA_BASE_URL } from './env'
+import { LOCAL_STORAGE_ACTIVITIES, LOCAL_STORAGE_ADV_SETTINGS, LOCAL_STORAGE_CLICK_POINT_REMOVE, LOCAL_STORAGE_IS_DEMO_MODE, LOCAL_STORAGE_SETTINGS_KEY, LOCAL_STORAGE_TOKEN_KEY, STRAVA_BASE_URL } from './env'
 import { environment } from '../../environments/environment'
 
 @Injectable({
@@ -29,5 +29,14 @@ export class AuthService {
             map(() => true),
             catchError(() => of(false))
         )
+    }
+
+    wipeLocalStorage() {
+        localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY)
+        localStorage.removeItem(LOCAL_STORAGE_SETTINGS_KEY)
+        localStorage.removeItem(LOCAL_STORAGE_IS_DEMO_MODE)
+        localStorage.removeItem(LOCAL_STORAGE_ADV_SETTINGS)
+        localStorage.removeItem(LOCAL_STORAGE_CLICK_POINT_REMOVE)
+        localStorage.removeItem(LOCAL_STORAGE_ACTIVITIES)
     }
 }
